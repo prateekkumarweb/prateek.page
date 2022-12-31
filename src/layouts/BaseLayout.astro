@@ -1,0 +1,40 @@
+---
+import Footer from "@/components/Footer.mdx";
+import NavBar from "@/components/NavBar.astro";
+import Analytics from "@/components/Analytics.astro";
+
+const showAnalytics = import.meta.env.PROD;
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#123456" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Prateek Kumar</title>
+    <style is:global>
+      svg {
+        @apply inline;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      class="antialiased font-sans text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 min-h-screen"
+    >
+      <div class="container mx-auto flex justify-around min-h-screen">
+        <div class="w-full max-w-screen-xl mx-4 flex flex-col">
+          <NavBar />
+          <div class="my-6 flex-grow">
+            <slot />
+          </div>
+          <hr />
+          <Footer />
+        </div>
+      </div>
+    </div>
+    {showAnalytics && <Analytics />}
+  </body>
+</html>

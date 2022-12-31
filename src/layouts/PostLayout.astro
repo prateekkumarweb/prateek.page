@@ -1,0 +1,24 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import TagList from "@/components/TagList.astro";
+import type { MarkdownLayoutProps } from "astro";
+import type { Frontmatter } from "@/types";
+import MarkdownBody from "@/components/MarkdownBody.astro";
+
+type Props = MarkdownLayoutProps<Frontmatter>;
+
+const { frontmatter } = Astro.props;
+const dateString = frontmatter.date.slice(0, 10);
+const imageUrl = frontmatter.image;
+---
+
+<BaseLayout>
+  {imageUrl && <img src={imageUrl} alt="banner image" class="mb-3 w-full" />}
+  <div class="flex items-center justify-between flex-wrap gap-2 mb-3">
+    <TagList tags={frontmatter.tags} />
+    <div class="text-sm">{dateString}</div>
+  </div>
+  <MarkdownBody>
+    <slot />
+  </MarkdownBody>
+</BaseLayout>

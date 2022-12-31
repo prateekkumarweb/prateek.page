@@ -1,0 +1,33 @@
+---
+import IconHeroiconsOutlineSun from "~icons/heroicons-outline/sun";
+import IconHeroiconsOutlineMoon from "~icons/heroicons-outline/moon";
+import IconHeroiconsOutlineSystem from "~icons/heroicons-outline/computer-desktop";
+import ThemeToggle from "./ThemeToggle.vue";
+---
+
+<nav class="flex justify-between my-4">
+  <a href="/">
+    <header class="text-2xl font-semibold">Prateek Kumar</header>
+  </a>
+  <ul class="flex gap-4 text-lg items-center">
+    <li>
+      <a href="/blog">Blog</a>
+    </li>
+    <li>
+      <a href="https://github.com/prateekkumarweb" target="_blank">GitHub</a>
+    </li>
+    <li>
+      <ThemeToggle client:only>
+        <IconHeroiconsOutlineSun slot="light" />
+        <IconHeroiconsOutlineMoon slot="dark" />
+        <IconHeroiconsOutlineSystem slot="auto" />
+      </ThemeToggle>
+    </li>
+  </ul>
+</nav>
+
+<style>
+  li a {
+    @apply no-underline hover:underline;
+  }
+</style>
