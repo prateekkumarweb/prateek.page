@@ -1,9 +1,6 @@
 ---
 import Footer from "@/components/Footer.mdx";
 import NavBar from "@/components/NavBar.astro";
-import Analytics from "@/components/Analytics.astro";
-
-const showAnalytics = import.meta.env.PROD;
 ---
 
 <html lang="en">
@@ -35,6 +32,5 @@ const showAnalytics = import.meta.env.PROD;
         </div>
       </div>
     </div>
-    {showAnalytics && <Analytics />}
   </body>
 </html>
