@@ -7,6 +7,7 @@ import emoji from "remark-gemoji";
 import math from "remark-math";
 import mathjax from "rehype-mathjax";
 import { execSync } from "node:child_process";
+import image from "@astrojs/image";
 
 const commitHash = execSync("git rev-parse --short HEAD").toString().trim();
 
@@ -22,7 +23,14 @@ export default defineConfig({
       }),
     ],
   },
-  integrations: [tailwind(), vue(), mdx()],
+  integrations: [
+    tailwind(),
+    vue(),
+    mdx(),
+    image({
+      serviceEntryPoint: "@astrojs/image/sharp",
+    }),
+  ],
   markdown: {
     remarkPlugins: [emoji, math],
     rehypePlugins: [mathjax],
