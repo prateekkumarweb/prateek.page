@@ -8,11 +8,13 @@ import math from "remark-math";
 import mathjax from "rehype-mathjax";
 import { execSync } from "node:child_process";
 import image from "@astrojs/image";
+import sitemap from "@astrojs/sitemap";
 
 const commitHash = execSync("git rev-parse --short HEAD").toString().trim();
 
 // https://astro.build/config
 export default defineConfig({
+  site: "https://prateek.page",
   vite: {
     define: {
       __APP_VERSION__: JSON.stringify(commitHash),
@@ -30,6 +32,7 @@ export default defineConfig({
     image({
       serviceEntryPoint: "@astrojs/image/sharp",
     }),
+    sitemap(),
   ],
   markdown: {
     remarkPlugins: [emoji, math],
