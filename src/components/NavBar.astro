@@ -1,20 +1,67 @@
 ---
+import IconHamburger from "~icons/pajamas/hamburger";
+import IconClose from "~icons/pajamas/close";
 import IconHeroiconsOutlineSun from "~icons/heroicons-outline/sun";
 import IconHeroiconsOutlineMoon from "~icons/heroicons-outline/moon";
 import IconHeroiconsOutlineSystem from "~icons/heroicons-outline/computer-desktop";
 import ThemeToggle from "./ThemeToggle.vue";
+
+import IconGitHub from "~icons/logos/github-icon";
+import IconTwitter from "~icons/logos/twitter";
+import IconLinkedIn from "~icons/logos/linkedin-icon";
+import IconMastodon from "~icons/logos/mastodon-icon";
 ---
 
-<nav class="flex justify-between my-4">
-  <a href="/">
-    <header class="text-2xl font-semibold">Prateek Kumar</header>
-  </a>
-  <ul class="flex gap-4 text-lg items-center">
+<nav class="flex flex-col md:flex-row justify-between my-4">
+  <div class="flex justify-between mb-4">
+    <header class="text-2xl font-semibold">
+      <a href="/">Prateek Kumar</a>
+    </header>
+    <button class="md:hidden text-lg" id="toggle-navbar" title="Toggle Menu">
+      <IconHamburger id="toggle-navbar-bars" />
+      <IconClose id="toggle-navbar-close" />
+    </button>
+  </div>
+  <ul
+    id="navbar-menu"
+    class="flex flex-col md:flex-row gap-4 text-lg items-start md:items-center"
+  >
     <li>
-      <a href="/blog">Blog</a>
+      <a href="/blog/">Blog</a>
     </li>
-    <li>
-      <a href="https://github.com/prateekkumarweb" target="_blank">GitHub</a>
+    <li class="inline-flex gap-4">
+      <a
+        rel={Astro.url.pathname === "/" ? "me" : ""}
+        href="https://github.com/prateekkumarweb"
+        target="_blank"
+        title="GitHub"
+      >
+        <IconGitHub />
+      </a>
+      <a
+        rel={Astro.url.pathname === "/" ? "me" : ""}
+        href="https://www.linkedin.com/in/prateekkumarweb/"
+        target="_blank"
+        title="LinkedIn"
+      >
+        <IconLinkedIn />
+      </a>
+      <a
+        rel={Astro.url.pathname === "/" ? "me" : ""}
+        href="https://twitter.com/prateekkumarweb"
+        target="_blank"
+        title="Twitter"
+      >
+        <IconTwitter />
+      </a>
+      <a
+        rel={Astro.url.pathname === "/" ? "me" : ""}
+        href="https://mastodon.online/@prateek"
+        target="_blank"
+        title="Mastodon"
+      >
+        <IconMastodon />
+      </a>
     </li>
     <li>
       <ThemeToggle client:only>
@@ -30,4 +77,37 @@ import ThemeToggle from "./ThemeToggle.vue";
   li a {
     @apply no-underline hover:underline;
   }
+  .pk-menu-hidden {
+    @apply hidden md:flex;
+  }
 </style>
+
+<script>
+  const navbarToggle = document.querySelector(
+    "#toggle-navbar"
+  ) as HTMLButtonElement;
+  const navbarMenu = document.querySelector("#navbar-menu") as HTMLElement;
+  const barsIcon = document.querySelector("#toggle-navbar-bars") as HTMLElement;
+  const closeIcon = document.querySelector(
+    "#toggle-navbar-close"
+  ) as HTMLElement;
+  let menuShown = false;
+
+  function onToggleMenu() {
+    if (menuShown) {
+      barsIcon.classList.add("hidden");
+      closeIcon.classList.remove("hidden");
+      navbarMenu.classList.remove("pk-menu-hidden");
+    } else {
+      barsIcon.classList.remove("hidden");
+      closeIcon.classList.add("hidden");
+      navbarMenu.classList.add("pk-menu-hidden");
+    }
+  }
+
+  onToggleMenu();
+  navbarToggle.addEventListener("click", () => {
+    menuShown = !menuShown;
+    onToggleMenu();
+  });
+</script>

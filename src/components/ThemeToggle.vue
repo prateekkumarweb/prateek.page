@@ -2,29 +2,41 @@
 import { useColorMode } from "@vueuse/core";
 
 const colorMode = useColorMode({ emitAuto: true });
-const toggleDark = () => {
-  if (colorMode.value == "light") colorMode.value = "dark";
-  else if (colorMode.value == "dark") colorMode.value = "auto";
-  else colorMode.value = "light";
-};
 </script>
 
 <template>
-  <span
-    class="cursor-pointer"
+  <div
+    class="inline-flex gap-1 border rounded-full border-gray-400 dark:border-gray-500 text-sm bg-gray-300 dark:bg-gray-600 p-[4px]"
     :title="
       colorMode == 'dark' ? 'Switch to light theme' : 'Switch to dark theme'
     "
-    @click="toggleDark()"
   >
-    <template v-if="colorMode == 'light'">
+    <button
+      class="w-8 h-8"
+      :class="colorMode == 'light' ? 'selected' : ''"
+      @click="colorMode = 'light'"
+    >
       <slot name="light" />
-    </template>
-    <template v-else-if="colorMode == 'dark'">
+    </button>
+    <button
+      class="w-8 h-8"
+      :class="colorMode == 'dark' ? 'selected' : ''"
+      @click="colorMode = 'dark'"
+    >
       <slot name="dark" />
-    </template>
-    <template v-else>
+    </button>
+    <button
+      class="w-8 h-8"
+      :class="colorMode == 'auto' ? 'selected' : ''"
+      @click="colorMode = 'auto'"
+    >
       <slot name="auto" />
-    </template>
-  </span>
+    </button>
+  </div>
 </template>
+
+<style scoped>
+.selected {
+  @apply bg-gray-100 rounded-full dark:bg-gray-800;
+}
+</style>

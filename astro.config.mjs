@@ -15,6 +15,7 @@ const commitHash = execSync("git rev-parse --short HEAD").toString().trim();
 // https://astro.build/config
 export default defineConfig({
   site: "https://prateek.page",
+  trailingSlash: "always",
   vite: {
     define: {
       __APP_VERSION__: JSON.stringify(commitHash),
