@@ -1,0 +1,108 @@
+---
+import IconHeroiconsOutlineSun from "~icons/heroicons-outline/sun";
+import IconHeroiconsOutlineMoon from "~icons/heroicons-outline/moon";
+import IconHeroiconsOutlineSystem from "~icons/heroicons-outline/computer-desktop";
+---
+
+<div
+  class="inline-flex gap-1 border rounded-full border-gray-400 dark:border-gray-500 text-sm bg-gray-300 dark:bg-gray-600 p-[4px]"
+  title="Switch theme"
+>
+  <button class="w-8 h-8" id="toggle-theme-light">
+    <IconHeroiconsOutlineSun />
+  </button>
+  <button class="w-8 h-8" id="toggle-theme-dark">
+    <IconHeroiconsOutlineMoon />
+  </button>
+  <button class="w-8 h-8" id="toggle-theme-system">
+    <IconHeroiconsOutlineSystem />
+  </button>
+</div>
+
+<style is:global>
+  .pk-theme-selected {
+    @apply bg-gray-100 rounded-full dark:bg-gray-800;
+  }
+</style>
+
+<script>
+  const toggleThemeLightButton = document.querySelector(
+    "#toggle-theme-light"
+  ) as HTMLButtonElement;
+  const toggleThemeDarkButton = document.querySelector(
+    "#toggle-theme-dark"
+  ) as HTMLButtonElement;
+  const toggleThemeSystemButton = document.querySelector(
+    "#toggle-theme-system"
+  ) as HTMLButtonElement;
+
+  function loadStartTheme() {
+    let currentTheme = localStorage["color-scheme"];
+    if (
+      currentTheme === "light" ||
+      currentTheme === "dark" ||
+      currentTheme === "system"
+    ) {
+      return currentTheme;
+    }
+    localStorage["color-scheme"] = "system";
+    return "system";
+  }
+
+  const htmlNode = document.querySelector("html") as HTMLElement;
+
+  function applyTheme(theme: string) {
+    if (theme === "light") {
+      htmlNode.classList.remove("dark");
+      toggleThemeLightButton.classList.add("pk-theme-selected");
+      toggleThemeDarkButton.classList.remove("pk-theme-selected");
+      toggleThemeSystemButton.classList.remove("pk-theme-selected");
+    } else if (theme === "dark") {
+      htmlNode.classList.add("dark");
+      toggleThemeLightButton.classList.remove("pk-theme-selected");
+      toggleThemeDarkButton.classList.add("pk-theme-selected");
+      toggleThemeSystemButton.classList.remove("pk-theme-selected");
+    } else if (theme === "system") {
+      toggleThemeLightButton.classList.remove("pk-theme-selected");
+      toggleThemeDarkButton.classList.remove("pk-theme-selected");
+      toggleThemeSystemButton.classList.add("pk-theme-selected");
+      let dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      if (dark) {
+        htmlNode.classList.add("dark");
+      } else {
+        htmlNode.classList.remove("dark");
+      }
+    }
+  }
+
+  window
+    .matchMedia("(prefers-color-scheme: dark)")
+    .addEventListener("change", () => {
+      applyTheme(currentTheme);
+    });
+
+  let currentTheme = loadStartTheme();
+  applyTheme(currentTheme);
+
+  window
+    .matchMedia("(prefers-color-scheme: dark)")
+    .addEventListener("change", () => {
+      applyTheme(currentTheme);
+    });
+
+  toggleThemeLightButton.onclick = () => {
+    currentTheme = "light";
+    localStorage["color-scheme"] = currentTheme;
+    applyTheme(currentTheme);
+  };
+  toggleThemeDarkButton.onclick = () => {
+    currentTheme = "dark";
+    localStorage["color-scheme"] = currentTheme;
+    applyTheme(currentTheme);
+  };
+  toggleThemeSystemButton.onclick = () => {
+    currentTheme = "system";
+    localStorage["color-scheme"] = currentTheme;
+    applyTheme(currentTheme);
+  };
+</script>

@@ -1,11 +1,7 @@
 ---
+import ThemeToggle from "./ThemeToggle.astro";
 import IconHamburger from "~icons/pajamas/hamburger";
 import IconClose from "~icons/pajamas/close";
-import IconHeroiconsOutlineSun from "~icons/heroicons-outline/sun";
-import IconHeroiconsOutlineMoon from "~icons/heroicons-outline/moon";
-import IconHeroiconsOutlineSystem from "~icons/heroicons-outline/computer-desktop";
-import ThemeToggle from "./ThemeToggle.vue";
-
 import IconGitHub from "~icons/logos/github-icon";
 import IconTwitter from "~icons/logos/twitter";
 import IconLinkedIn from "~icons/logos/linkedin-icon";
@@ -64,11 +60,7 @@ import IconMastodon from "~icons/logos/mastodon-icon";
       </a>
     </li>
     <li>
-      <ThemeToggle client:only>
-        <IconHeroiconsOutlineSun slot="light" />
-        <IconHeroiconsOutlineMoon slot="dark" />
-        <IconHeroiconsOutlineSystem slot="auto" />
-      </ThemeToggle>
+      <ThemeToggle />
     </li>
   </ul>
 </nav>

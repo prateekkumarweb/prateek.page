@@ -1,12 +1,11 @@
 import { defineConfig } from "astro/config";
+import { execSync } from "node:child_process";
 import tailwind from "@astrojs/tailwind";
-import vue from "@astrojs/vue";
 import mdx from "@astrojs/mdx";
 import icons from "unplugin-icons/vite";
 import emoji from "remark-gemoji";
 import math from "remark-math";
 import mathjax from "rehype-mathjax";
-import { execSync } from "node:child_process";
 import image from "@astrojs/image";
 import sitemap from "@astrojs/sitemap";
 
@@ -28,7 +27,6 @@ export default defineConfig({
   },
   integrations: [
     tailwind(),
-    vue(),
     mdx(),
     image({
       serviceEntryPoint: "@astrojs/image/sharp",
