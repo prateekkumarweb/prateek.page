@@ -36,6 +36,5 @@ export default defineConfig({
   markdown: {
     remarkPlugins: [emoji, math],
     rehypePlugins: [mathjax],
-    extendDefaultPlugins: true,
   },
 });

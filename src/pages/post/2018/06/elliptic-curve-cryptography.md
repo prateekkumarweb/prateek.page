@@ -81,4 +81,7 @@ $$
 
 ## Conclusion
 
-ECC with a private key of size 256 bits offers the same security as RSA used with 3072 bits size key<sup><a href="https://www.globalsign.com/en/blog/elliptic-curve-cryptography/" title="Elliptic Curve Cryptography, GlobalSign Blog" target="_blank" rel="nofollow noopener noreferrer">1</a></sup>. Hence ECC is more used when compared to RSA for mobile devices where the size of the key matters. The operation of encryption and decryption is symmetric in case of RSA hence the same can be used for Digital Signatures, but it is not the same in ECC, and hence a different algorithm is used for signing<sup><a href="https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm" title="Elliptic Curve Digital Signature Algorithm, Wikipedia" target="_blank" rel="nofollow noopener noreferrer">2</a></sup>.
+ECC with a private key of size 256 bits offers the same security as RSA used with 3072 bits size key[^1]. Hence ECC is more used when compared to RSA for mobile devices where the size of the key matters. The operation of encryption and decryption is symmetric in case of RSA hence the same can be used for Digital Signatures, but it is not the same in ECC, and hence a different algorithm is used for signing[^2].
+
+[^1]: <a href="https://www.globalsign.com/en/blog/elliptic-curve-cryptography/" target="_blank" rel="nofollow noopener noreferrer">Elliptic Curve Cryptography, GlobalSign Blog</a>
+[^2]: <a href="https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm" target="_blank" rel="nofollow noopener noreferrer">Elliptic Curve Digital Signature Algorithm, Wikipedia</a>
