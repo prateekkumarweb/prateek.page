@@ -13,6 +13,9 @@ const commitHash = execSync("git rev-parse --short HEAD").toString().trim();
 
 // https://astro.build/config
 export default defineConfig({
+  // experimental: {
+  //   assets: true,
+  // },
   site: "https://prateek.page",
   trailingSlash: "always",
   vite: {
