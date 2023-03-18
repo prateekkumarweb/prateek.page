@@ -1,5 +1,4 @@
 ---
-layout: "@/layouts/PostLayout.astro"
 title: Hello, World!
 date: 2018-01-01
 tags:

@@ -1,5 +1,4 @@
 ---
-layout: "@/layouts/PostLayout.astro"
 title: Public Key Cryptography using Elliptic Curves
 date: 2018-06-02
 image: https://static.prateek.page/images/posts/elliptic-curve.png

@@ -1,5 +1,4 @@
 ---
-layout: "@/layouts/PostLayout.astro"
 title: GNU Readline for Tab autocomplete and Bash like History
 date: 2018-08-18
 tags:

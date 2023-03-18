@@ -1,12 +1,11 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import PostList from "@/components/PostList.astro";
-import type { Frontmatter } from "@/types";
+import { getCollection } from "astro:content";
 
-const allPosts = await Astro.glob<Frontmatter>("./post/*/*/*.md");
-const posts = allPosts.reverse();
+const allPosts = (await getCollection("post")).reverse();
 ---
 
 <BaseLayout>
-  <PostList posts={posts} />
+  <PostList posts={allPosts} />
 </BaseLayout>

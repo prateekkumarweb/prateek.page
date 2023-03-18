@@ -1,14 +1,17 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
 import TagList from "@/components/TagList.astro";
-import type { MarkdownLayoutProps } from "astro";
-import type { Frontmatter } from "@/types";
 import MarkdownBody from "@/components/MarkdownBody.astro";
+import type { CollectionEntry } from "astro:content";
 
-type Props = MarkdownLayoutProps<Frontmatter>;
+type Frontmatter = CollectionEntry<"post">["data"];
+
+type Props = {
+  frontmatter: Frontmatter;
+};
 
 const { frontmatter } = Astro.props;
-const dateString = frontmatter.date.slice(0, 10);
+const dateString = frontmatter.date.toDateString();
 const imageUrl = frontmatter.image;
 ---
 

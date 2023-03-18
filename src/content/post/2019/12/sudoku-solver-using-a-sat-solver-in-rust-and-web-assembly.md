@@ -1,5 +1,4 @@
 ---
-layout: "@/layouts/PostLayout.astro"
 title: Sudoku solver using a SAT Solver in Rust and WebAssembly
 date: 2019-12-30
 tags:

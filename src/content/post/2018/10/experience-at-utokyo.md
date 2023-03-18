@@ -1,5 +1,4 @@
 ---
-layout: "@/layouts/PostLayout.astro"
 title: Experience at UTokyo
 date: 2018-10-05
 image: https://static.prateek.page/images/posts/utokyo.jpg

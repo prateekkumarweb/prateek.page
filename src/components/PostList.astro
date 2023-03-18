@@ -1,10 +1,9 @@
 ---
-import type { Frontmatter } from "@/types";
-import type { MarkdownInstance } from "astro";
+import type { CollectionEntry } from "astro:content";
 import TagList from "./TagList.astro";
 
 interface Props {
-  posts: MarkdownInstance<Frontmatter>[];
+  posts: CollectionEntry<"post">[];
 }
 
 const { posts } = Astro.props;
@@ -16,14 +15,16 @@ const { posts } = Astro.props;
     posts.map((post) => (
       <li>
         <div class="flex justify-between">
-          <a href={post.url} class="underline hover:no-underline">
-            {post.frontmatter.title}
+          <a href={`/post/${post.slug}/`} class="underline hover:no-underline">
+            {post.data.title}
           </a>
           <div class="text-sm text-gray-700 dark:text-gray-300 my-1">
-            {post.frontmatter.date.slice(0, 10)}
+            <time datetime={post.data.date.toISOString()}>
+              {post.data.date.toDateString()}
+            </time>
           </div>
         </div>
-        <TagList tags={post.frontmatter.tags} />
+        <TagList tags={post.data.tags} />
       </li>
     ))
   }
