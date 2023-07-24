@@ -10,26 +10,26 @@
     "preview": "astro preview",
     "check": "astro check",
     "astro": "astro",
-    "fmt": "prettier --write --plugin-search-dir=. ."
+    "fmt": "prettier --write . \"**/*.astro\""
   },
   "dependencies": {
-    "@astrojs/image": "^0.16.1",
-    "@astrojs/mdx": "^0.18.1",
-    "@astrojs/sitemap": "^1.2.1",
-    "@astrojs/tailwind": "^3.1.1",
-    "@tailwindcss/forms": "^0.5.3",
+    "@astrojs/image": "^0.17.2",
+    "@astrojs/mdx": "^0.19.7",
+    "@astrojs/sitemap": "^2.0.1",
+    "@astrojs/tailwind": "^4.0.0",
+    "@tailwindcss/forms": "^0.5.4",
     "@tailwindcss/typography": "^0.5.9",
-    "astro": "^2.1.3",
-    "rehype-mathjax": "^4.0.2",
+    "astro": "^2.9.2",
+    "rehype-mathjax": "^4.0.3",
     "remark-gemoji": "^7.0.1",
     "remark-math": "^5.1.1",
-    "sharp": "^0.31.3",
-    "tailwindcss": "^3.2.7",
-    "unplugin-icons": "^0.15.3"
+    "sharp": "^0.32.4",
+    "tailwindcss": "^3.3.3",
+    "unplugin-icons": "^0.16.5"
   },
   "devDependencies": {
-    "@iconify/json": "^2.2.36",
-    "prettier": "^2.8.4",
-    "prettier-plugin-astro": "^0.8.0"
+    "@iconify/json": "^2.2.94",
+    "prettier": "^3.0.0",
+    "prettier-plugin-astro": "^0.11.0"
   }
 }
