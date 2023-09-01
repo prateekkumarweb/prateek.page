@@ -87,12 +87,12 @@ import IconMastodon from "~icons/logos/mastodon-icon";
 
   function onToggleMenu() {
     if (menuShown) {
-      barsIcon.classList.add("hidden");
-      closeIcon.classList.remove("hidden");
+      barsIcon.classList.add("!hidden");
+      closeIcon.classList.remove("!hidden");
       navbarMenu.classList.remove("pk-menu-hidden");
     } else {
-      barsIcon.classList.remove("hidden");
-      closeIcon.classList.add("hidden");
+      barsIcon.classList.remove("!hidden");
+      closeIcon.classList.add("!hidden");
       navbarMenu.classList.add("pk-menu-hidden");
     }
   }

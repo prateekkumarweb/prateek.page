@@ -1,5 +1,5 @@
 ---
-import { Picture } from "@astrojs/image/components";
+import { Image } from "astro:assets";
 import IconLogosRust from "~icons/logos/rust";
 import IconLogosJavaScript from "~icons/logos/javascript";
 
@@ -7,14 +7,12 @@ const profileImageUrl = "https://static.prateek.page/images/profile.jpg";
 ---
 
 <div class="flex gap-16 items-center flex-col md:flex-row">
-  <Picture
+  <Image
     src={profileImageUrl}
     alt="Prateek Kumar"
-    sizes="(max-width: 384px) 100vw, 384px"
-    widths={[256, 384, 656]}
-    aspectRatio="1:1"
+    width={384}
+    height={384}
     class="rounded-full"
-    loading="eager"
   />
   <div class="flex-grow">
     <h1 class="text-4xl font-extrabold">Prateek Kumar</h1>

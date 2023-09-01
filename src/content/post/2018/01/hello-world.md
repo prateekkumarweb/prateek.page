@@ -52,13 +52,13 @@ _You **can** combine them_
 ```md
 As Grace Hopper said:
 
-> I’ve always been more interested
+> I've always been more interested
 > in the future than in the past.
 ```
 
 As Grace Hopper said:
 
-> I’ve always been more interested
+> I've always been more interested
 > in the future than in the past.
 
 ## Lists
@@ -115,7 +115,7 @@ http://github.com - automatic!
 
 ## Backslash escapes
 
-Markdown allows you to use backslash escapes to generate literal characters which would otherwise have special meaning in Markdown’s formatting syntax.
+Markdown allows you to use backslash escapes to generate literal characters which would otherwise have special meaning in Markdown's formatting syntax.
 
 ```md
 \*literal asterisks\*
@@ -153,14 +153,14 @@ Emoji! :+1: :sparkles: :camel: :tada: :rocket: :smile: :panda_face: :first_quart
 ````md
 ```javascript
 function test() {
-  console.log("look ma’, no spaces");
+  console.log("look ma', no spaces");
 }
 ```
 ````
 
 ```javascript
 function test() {
-  console.log("look ma’, no spaces");
+  console.log("look ma', no spaces");
 }
 ```
 
