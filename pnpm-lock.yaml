@@ -45,8 +45,8 @@ dependencies:
     specifier: ^5.2.2
     version: 5.2.2
   unplugin-icons:
-    specifier: ^0.16.6
-    version: 0.16.6
+    specifier: ^0.17.0
+    version: 0.17.0
 
 devDependencies:
   '@iconify/json':
@@ -4781,8 +4781,8 @@ packages:
     engines: {node: '>= 4.0.0'}
     dev: false
 
-  /unplugin-icons@0.16.6:
-    resolution: {integrity: sha512-jL70sAC7twp4hI/MTfm+vyvTRtHqiEIzf3XOjJz7yzhMEEQnk5Ey5YIXRAU03Mc4BF99ITvvnBzfyRZee86OeA==}
+  /unplugin-icons@0.17.0:
+    resolution: {integrity: sha512-gMv66eY/Hj64heM55XrfDH3LUCWI51mtkBVUPVl9VkpvLgAYhdVe9nRuzu6p+idmCLSQVq7xiPxQcD4aXCgW5A==}
     peerDependencies:
       '@svgr/core': '>=7.0.0'
       '@svgx/core': ^1.0.1
