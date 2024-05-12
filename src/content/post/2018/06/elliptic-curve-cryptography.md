@@ -13,7 +13,7 @@ tags:
 
 # Public Key Cryptography using Elliptic Curves
 
-[**Trapdoor functions**](https://en.wikipedia.org/wiki/Trapdoor_function) or **one-way functions** are essential for the working of public key cryptography or asymmetric cryptography where computing the reverse of the function is not feasible by modern day computers. Multiplication of two primes is easy but factoring a product of two primes is difficult, and this forms the basis of RSA cryptography, the widely used public key cryptography system. If you do not know what RSA is, I suggest reading [this](https://brilliant.org/wiki/rsa-encryption/). In this post, I talk about another asymmetric cryptography system known as Elliptic Curve Cryptography.
+[**Trapdoor functions**](https://en.wikipedia.org/wiki/Trapdoor_function) or **one-way functions** are essential for the working of public key cryptography or asymmetric cryptography where computing the reverse of the function is not feasible by modern day computers. Multiplication of two primes is easy but factoring a product of two primes is difficult, and this forms the basis of RSA cryptography, the widely used public key cryptography system. If you do not know what RSA is, I suggest reading [this aritlce on RSA by Brilliant](https://brilliant.org/wiki/rsa-encryption/). In this post, I talk about another asymmetric cryptography system known as Elliptic Curve Cryptography.
 
 <!--more-->
 

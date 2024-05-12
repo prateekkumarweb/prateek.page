@@ -1,6 +1,18 @@
 ---
 import Footer from "@/components/Footer.mdx";
 import NavBar from "@/components/NavBar.astro";
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string | undefined;
+}
+
+const {
+  title = "Prateek Kumar",
+  description = "Prateek Kumar | Software Engineer | Rust and JavaScript",
+  image = "https://static.prateek.page/images/profile.jpg",
+} = Astro.props;
 ---
 
 <html lang="en">
@@ -10,11 +22,13 @@ import NavBar from "@/components/NavBar.astro";
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#123456" />
     <meta name="generator" content={Astro.generator} />
-    <title>Prateek Kumar</title>
-    <meta
-      name="description"
-      content="Prateek Kumar | Software Engineer | Rust and JavaScript"
-    />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content={image} />
+    <meta property="og:url" content={Astro.url} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
     <style is:global>
       svg.icon {
         @apply inline;

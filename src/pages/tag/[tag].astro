@@ -18,7 +18,7 @@ const { tag } = Astro.params;
 const { posts } = Astro.props;
 ---
 
-<BaseLayout>
+<BaseLayout title={"Tag #" + tag + " | Prateek Kumar"}>
   <h2 class="text-xl italic mb-2">{`#${tag}`}</h2>
   <PostList posts={posts} />
 </BaseLayout>

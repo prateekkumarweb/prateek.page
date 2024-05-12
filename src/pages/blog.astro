@@ -6,6 +6,6 @@ import { getCollection } from "astro:content";
 const allPosts = (await getCollection("post")).reverse();
 ---
 
-<BaseLayout>
+<BaseLayout title="Blog | Prateek Kumar" description="Blog by Prateek Kumar">
   <PostList posts={allPosts} />
 </BaseLayout>

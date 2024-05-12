@@ -15,7 +15,7 @@ const dateString = frontmatter.date.toDateString();
 const imageUrl = frontmatter.image;
 ---
 
-<BaseLayout>
+<BaseLayout title={frontmatter.title + " | Prateek Kumar"} image={imageUrl}>
   {imageUrl && <img src={imageUrl} alt="banner image" class="mb-3 w-full" />}
   <div class="flex items-center justify-between flex-wrap gap-2 mb-3">
     <TagList tags={frontmatter.tags} />
