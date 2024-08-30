@@ -1,2 +1,2 @@
-/post/2018/:month/* /:splat
-/post/2019/:month/* /:splat
+/post/2018/:month/* /post/:splat
+/post/2019/:month/* /post/:splat
