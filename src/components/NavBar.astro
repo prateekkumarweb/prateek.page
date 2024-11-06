@@ -2,10 +2,11 @@
 import ThemeToggle from "./ThemeToggle.astro";
 import IconHamburger from "~icons/pajamas/hamburger";
 import IconClose from "~icons/pajamas/close";
-import IconGitHub from "~icons/logos/github-icon";
-import IconTwitter from "~icons/logos/twitter";
-import IconLinkedIn from "~icons/logos/linkedin-icon";
-import IconMastodon from "~icons/logos/mastodon-icon";
+import IconGitHub from "~icons/simple-icons/github";
+import IconBluesky from "~icons/simple-icons/bluesky";
+import IconX from "~icons/simple-icons/x";
+import IconLinkedIn from "~icons/simple-icons/linkedin";
+import IconMastodon from "~icons/simple-icons/mastodon";
 ---
 
 <nav class="flex flex-col md:flex-row justify-between my-4">
@@ -38,6 +39,15 @@ import IconMastodon from "~icons/logos/mastodon-icon";
       </a>
       <a
         rel={Astro.url.pathname === "/" ? "me" : ""}
+        href="https://bsky.app/profile/prateek.page"
+        target="_blank"
+        title="Bluesky"
+        aria-label="Bluesky"
+      >
+        <IconBluesky />
+      </a>
+      <a
+        rel={Astro.url.pathname === "/" ? "me" : ""}
         href="https://www.linkedin.com/in/prateekkumarweb/"
         target="_blank"
         title="LinkedIn"
@@ -47,12 +57,12 @@ import IconMastodon from "~icons/logos/mastodon-icon";
       </a>
       <a
         rel={Astro.url.pathname === "/" ? "me" : ""}
-        href="https://twitter.com/prateekkumarweb"
+        href="https://x.com/prateekkumarweb"
         target="_blank"
-        title="Twitter"
-        aria-label="Twitter"
+        title="X"
+        aria-label="X"
       >
-        <IconTwitter />
+        <IconX />
       </a>
       <a
         rel={Astro.url.pathname === "/" ? "me" : ""}
