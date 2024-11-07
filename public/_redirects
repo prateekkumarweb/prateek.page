@@ -1,2 +1,3 @@
 /post/2018/:month/* /post/:splat
 /post/2019/:month/* /post/:splat
+/bsky http://bsky.app/profile/prateek.page

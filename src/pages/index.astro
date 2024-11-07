@@ -1,8 +1,18 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
-import HeroBanner from "../components/HeroBanner.astro";
-import MarkdownBody from "../components/MarkdownBody.astro";
-import Profile from "../components/Profile.mdx";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import HeroBanner from "@/components/HeroBanner.astro";
+import MarkdownBody from "@/components/MarkdownBody.astro";
+import Profile from "@/components/Profile.mdx";
+import { getCollection } from "astro:content";
+import PostList from "@/components/PostList.astro";
+
+const allPosts = (await getCollection("post"))
+  .sort((a, b) => {
+    if (a.data.date < b.data.date) return -1;
+    if (a.data.date > b.data.date) return 1;
+    return 0;
+  })
+  .reverse();
 ---
 
 <BaseLayout>
@@ -11,5 +21,7 @@ import Profile from "../components/Profile.mdx";
   <div class="mt-12"></div>
   <MarkdownBody>
     <Profile />
+    <h2>Archive</h2>
+    <PostList posts={allPosts} />
   </MarkdownBody>
 </BaseLayout>
