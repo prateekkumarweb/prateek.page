@@ -7,6 +7,7 @@ const postCollection = defineCollection({
     image: z.string().optional(),
     tags: z.array(z.string()),
     math: z.boolean().optional(),
+    publish: z.boolean().default(true),
   }),
 });
 

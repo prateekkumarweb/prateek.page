@@ -10,14 +10,19 @@ const { posts } = Astro.props;
 
 <ul>
   {
-    posts.map((post) => (
-      <li>
-        <div class="flex justify-between">
-          <a href={`/post/${post.slug}/`} class="underline hover:no-underline">
-            {post.data.title}
-          </a>
-        </div>
-      </li>
-    ))
+    posts
+      .filter((post) => post.data.publish)
+      .map((post) => (
+        <li>
+          <div class="flex justify-between">
+            <a
+              href={`/post/${post.slug}/`}
+              class="underline hover:no-underline"
+            >
+              {post.data.title}
+            </a>
+          </div>
+        </li>
+      ))
   }
 </ul>
