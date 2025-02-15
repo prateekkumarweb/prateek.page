@@ -20,6 +20,8 @@ import IconHeroiconsOutlineSystem from "~icons/heroicons-outline/computer-deskto
 </div>
 
 <style is:global>
+  @reference "../styles/global.css";
+
   .pk-theme-selected {
     @apply bg-gray-100 rounded-full dark:bg-gray-800;
   }
@@ -27,13 +29,13 @@ import IconHeroiconsOutlineSystem from "~icons/heroicons-outline/computer-deskto
 
 <script>
   const toggleThemeLightButton = document.querySelector(
-    "#toggle-theme-light",
+    "#toggle-theme-light"
   ) as HTMLButtonElement;
   const toggleThemeDarkButton = document.querySelector(
-    "#toggle-theme-dark",
+    "#toggle-theme-dark"
   ) as HTMLButtonElement;
   const toggleThemeSystemButton = document.querySelector(
-    "#toggle-theme-system",
+    "#toggle-theme-system"
   ) as HTMLButtonElement;
 
   function loadStartTheme() {

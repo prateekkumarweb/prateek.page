@@ -1,12 +1,12 @@
 import { defineConfig } from "astro/config";
 import { execSync } from "node:child_process";
-import tailwind from "@astrojs/tailwind";
 import mdx from "@astrojs/mdx";
 import icons from "unplugin-icons/vite";
 import emoji from "remark-gemoji";
 import math from "remark-math";
 import mathjax from "rehype-mathjax";
 import sitemap from "@astrojs/sitemap";
+import tailwindcss from "@tailwindcss/vite";
 
 const commitHash = execSync("git rev-parse --short HEAD").toString().trim();
 
@@ -23,6 +23,7 @@ export default defineConfig({
         compiler: "astro",
         defaultClass: "icon",
       }),
+      tailwindcss(),
     ],
   },
   image: {
@@ -30,7 +31,7 @@ export default defineConfig({
       entrypoint: "astro/assets/services/sharp",
     },
   },
-  integrations: [tailwind(), mdx(), sitemap()],
+  integrations: [mdx(), sitemap()],
   markdown: {
     remarkPlugins: [emoji, math],
     rehypePlugins: [mathjax],
