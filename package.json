@@ -14,23 +14,23 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",
-    "@astrojs/mdx": "^4.3.3",
-    "@astrojs/sitemap": "^3.4.2",
+    "@astrojs/mdx": "^4.3.4",
+    "@astrojs/sitemap": "^3.5.1",
     "@tailwindcss/forms": "^0.5.10",
     "@tailwindcss/typography": "^0.5.16",
-    "@tailwindcss/vite": "^4.1.11",
-    "astro": "^5.12.9",
+    "@tailwindcss/vite": "^4.1.13",
+    "astro": "^5.13.5",
     "rehype-mathjax": "^7.1.0",
     "remark-gemoji": "^8.0.0",
     "remark-math": "^6.0.0",
     "sharp": "^0.34.3",
-    "tailwindcss": "^4.1.11",
+    "tailwindcss": "^4.1.13",
     "typescript": "^5.9.2",
     "unplugin-icons": "^22.2.0"
   },
   "devDependencies": {
-    "@iconify/json": "^2.2.367",
-    "@types/node": "^24.2.1",
+    "@iconify/json": "^2.2.382",
+    "@types/node": "^24.3.1",
     "prettier": "^3.6.2",
     "prettier-plugin-astro": "^0.14.1"
   }
