@@ -5,7 +5,7 @@ import IconHeroiconsOutlineSystem from "~icons/heroicons-outline/computer-deskto
 ---
 
 <div
-  class="inline-flex gap-1 border rounded-full border-gray-400 dark:border-gray-500 text-sm bg-gray-300 dark:bg-gray-600 p-[4px]"
+  class="inline-flex gap-1 border rounded-full border-gray-400 dark:border-gray-500 text-sm bg-gray-300 dark:bg-gray-600 p-1"
   title="Switch theme"
 >
   <button class="w-8 h-8" id="toggle-theme-light" aria-label="Light Theme">
@@ -29,13 +29,13 @@ import IconHeroiconsOutlineSystem from "~icons/heroicons-outline/computer-deskto
 
 <script>
   const toggleThemeLightButton = document.querySelector(
-    "#toggle-theme-light"
+    "#toggle-theme-light",
   ) as HTMLButtonElement;
   const toggleThemeDarkButton = document.querySelector(
-    "#toggle-theme-dark"
+    "#toggle-theme-dark",
   ) as HTMLButtonElement;
   const toggleThemeSystemButton = document.querySelector(
-    "#toggle-theme-system"
+    "#toggle-theme-system",
   ) as HTMLButtonElement;
 
   function loadStartTheme() {
