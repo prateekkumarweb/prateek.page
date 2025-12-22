@@ -64,103 +64,147 @@ const postsData = allPosts.map((post) => ({
   </div>
 
   <script is:inline define:vars={{ postsData }}>
-    // Terminal state
-    let currentDir = "~";
-    let commandHistory = [];
-    let historyIndex = -1;
-    let fileSystem = {
-      "~": {
-        type: "dir",
-        contents: {
-          "profile.txt": { type: "file" },
-          "projects.txt": { type: "file" },
-          "education.txt": { type: "file" },
-          "publications.txt": { type: "file" },
-          "contact.txt": { type: "file" },
-          ".secrets": { type: "file" },
-          post: { type: "dir", contents: {} },
-        },
-      },
-    };
+    import("/src/lib/filesystem.ts").then(({ FileSystem }) => {
+      // Initialize filesystem
+      const fs = new FileSystem();
+      let commandHistory = [];
+      let historyIndex = -1;
 
-    // Add blog posts to post directory
-    postsData.forEach((post) => {
-      fileSystem["~"].contents["post"].contents[`${post.slug}.md`] = {
-        type: "file",
-        data: post,
-      };
-    });
+      // DOM elements
+      const terminalOutput = document.getElementById("terminal-output");
+      const terminalContainer = document.getElementById("terminal-container");
+      const commandInput = document.getElementById("command-input");
+      const statusDir = document.getElementById("status-dir");
+      const promptDir = document.getElementById("prompt-dir");
+      const statusTime = document.getElementById("status-time");
 
-    // DOM elements
-    const terminalOutput = document.getElementById("terminal-output");
-    const terminalContainer = document.getElementById("terminal-container");
-    const commandInput = document.getElementById("command-input");
-    const inputLine = document.getElementById("input-line");
-    const statusDir = document.getElementById("status-dir");
-    const promptDir = document.getElementById("prompt-dir");
-    const promptUser = document.getElementById("prompt-user");
-    const statusTime = document.getElementById("status-time");
+      // Initialize filesystem and load state
+      fs.init().then(async () => {
+        // Add blog posts to filesystem
+        for (const post of postsData) {
+          const path = `/home/user/post/${post.slug}.md`;
+          if (!fs.exists(path)) {
+            await fs.writeFile(path, "", false);
+            fs.setFileData(path, post);
+          }
+        }
 
-    // Update time in status bar
-    function updateTime() {
-      const now = new Date();
-      statusTime.textContent = now.toLocaleTimeString();
-    }
-    setInterval(updateTime, 1000);
-    updateTime();
+        // Load saved directory
+        const cwd = await fs.loadCwd();
+        updatePrompt();
 
-    // Add output to terminal
-    function addOutput(html, className = "") {
-      const div = document.createElement("div");
-      div.className = className;
-      div.innerHTML = html;
-      terminalOutput.appendChild(div);
-      // Scroll to bottom
-      window.scrollTo(0, document.body.scrollHeight);
-    }
+        // Show welcome message
+        showWelcome();
+      });
 
-    // Add command to terminal output
-    function addCommandToOutput(cmd) {
-      const cmdDiv = document.createElement("div");
-      cmdDiv.className = "mb-2";
-      cmdDiv.innerHTML = `<span class="text-shell-blue">user@prateek.page</span><span class="text-shell-blue-light">:</span><span class="text-shell-accent">${currentDir}</span><span class="text-white">$&nbsp;</span>${cmd}`;
-      terminalOutput.appendChild(cmdDiv);
-    }
+      // Update time in status bar
+      function updateTime() {
+        const now = new Date();
+        statusTime.textContent = now.toLocaleTimeString();
+      }
+      setInterval(updateTime, 1000);
+      updateTime();
 
-    // Update prompt directory
-    function updatePrompt() {
-      promptDir.textContent = currentDir;
-      statusDir.textContent = currentDir === "~" ? "~/" : currentDir + "/";
-    }
+      // Add output to terminal
+      function addOutput(html, className = "") {
+        const div = document.createElement("div");
+        div.className = className;
+        div.innerHTML = html;
+        terminalOutput.appendChild(div);
+        // Scroll to bottom
+        window.scrollTo(0, document.body.scrollHeight);
+      }
 
-    // Welcome message
-    function showWelcome() {
-      const welcome = `
+      // Add command to terminal output
+      function addCommandToOutput(cmd) {
+        const currentDir = fs.pwd();
+        const cmdDiv = document.createElement("div");
+        cmdDiv.className = "mb-2";
+        cmdDiv.innerHTML = `<span class="text-shell-blue">user@prateek.page</span><span class="text-shell-blue-light">:</span><span class="text-shell-accent">${currentDir}</span><span class="text-white">$&nbsp;</span>${cmd}`;
+        terminalOutput.appendChild(cmdDiv);
+      }
+
+      // Update prompt directory
+      function updatePrompt() {
+        const currentDir = fs.pwd();
+        promptDir.textContent = currentDir;
+        statusDir.textContent = currentDir === "~" ? "~/" : currentDir + "/";
+      }
+
+      // Welcome message
+      function showWelcome() {
+        const welcome = `
 <div class="mb-4 text-shell-text">
 <div class="text-shell-accent font-bold text-lg mb-2">Welcome to the interactive shell!</div>
 
 Type <span class="text-shell-blue font-bold">help</span> to see available commands.
 Type <span class="text-shell-blue font-bold">ls</span> to list files and directories.
 
-<div class="text-shell-text-dimmer mt-2">Hint: Try some easter eggs like 'whoami', 'sudo', or 'hack'</div>
+<div class="text-shell-text-dimmer mt-2">Hint: Try creating files with 'touch' or directories with 'mkdir'</div>
 </div>
 `;
-      addOutput(welcome);
-    }
+        addOutput(welcome);
+      }
 
-    // Commands implementation
-    const commands = {
-      help: () => {
-        return `
+      // Parse command with support for flags and redirects
+      function parseCommand(input) {
+        const parts = input.trim().split(/\s+/);
+        const cmd = parts[0];
+        const args = [];
+        const flags = {};
+        let redirect = null;
+
+        for (let i = 1; i < parts.length; i++) {
+          const part = parts[i];
+
+          // Check for redirects
+          if (part === ">" || part === ">>") {
+            redirect = {
+              type: part,
+              target: parts[i + 1],
+            };
+            break;
+          }
+
+          // Check for flags
+          if (part.startsWith("-")) {
+            const flagName = part.slice(1);
+            flags[flagName] = true;
+          } else {
+            args.push(part);
+          }
+        }
+
+        return { cmd, args, flags, redirect };
+      }
+
+      // Commands implementation
+      const commands = {
+        help: async () => {
+          return `
 <div class="space-y-1">
   <div class="text-white font-bold mb-2">Available Commands:</div>
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-shell-text">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-shell-text text-xs">
     <div><span class="text-shell-blue font-bold">help</span> - Show this help message</div>
-    <div><span class="text-shell-blue font-bold">ls</span> - List directory contents</div>
+    <div><span class="text-shell-blue font-bold">ls [-l]</span> - List directory contents</div>
     <div><span class="text-shell-blue font-bold">cat [file]</span> - Display file contents</div>
     <div><span class="text-shell-blue font-bold">cd [dir]</span> - Change directory</div>
     <div><span class="text-shell-blue font-bold">pwd</span> - Print working directory</div>
+    <div><span class="text-shell-blue font-bold">mkdir [-p] [dir]</span> - Create directory</div>
+    <div><span class="text-shell-blue font-bold">rmdir [dir]</span> - Remove empty directory</div>
+    <div><span class="text-shell-blue font-bold">touch [file]</span> - Create/update file</div>
+    <div><span class="text-shell-blue font-bold">rm [-rf] [path]</span> - Remove file/directory</div>
+    <div><span class="text-shell-blue font-bold">cp [-r] [src] [dst]</span> - Copy file/directory</div>
+    <div><span class="text-shell-blue font-bold">mv [src] [dst]</span> - Move/rename file</div>
+    <div><span class="text-shell-blue font-bold">echo [text]</span> - Print text (use > or >> to redirect)</div>
+    <div><span class="text-shell-blue font-bold">grep [pattern] [file]</span> - Search in file</div>
+    <div><span class="text-shell-blue font-bold">find [path] [pattern]</span> - Find files</div>
+    <div><span class="text-shell-blue font-bold">wc [file]</span> - Count lines, words, chars</div>
+    <div><span class="text-shell-blue font-bold">head [-n N] [file]</span> - Show first N lines</div>
+    <div><span class="text-shell-blue font-bold">tail [-n N] [file]</span> - Show last N lines</div>
+    <div><span class="text-shell-blue font-bold">tree [-L N]</span> - Show directory tree</div>
     <div><span class="text-shell-blue font-bold">clear</span> - Clear terminal</div>
+    <div><span class="text-shell-blue font-bold">reset</span> - Reset filesystem to default</div>
     <div><span class="text-shell-blue font-bold">whoami</span> - Display current user</div>
     <div><span class="text-shell-blue font-bold">neofetch</span> - System information</div>
     <div><span class="text-shell-blue font-bold">matrix</span> - Enter the matrix</div>
@@ -170,79 +214,75 @@ Type <span class="text-shell-blue font-bold">ls</span> to list files and directo
     <div><span class="text-shell-blue font-bold">exit</span> - Exit shell mode</div>
   </div>
 </div>`;
-      },
+        },
 
-      ls: (args) => {
-        let targetDir = currentDir;
+        ls: async (args, flags) => {
+          try {
+            const path = args[0] || ".";
 
-        // Handle ls post or ls post/
-        if (args[0]) {
-          const target = args[0].replace(/\/$/, ""); // Remove trailing slash
-          if (target === "post" && currentDir === "~") {
-            targetDir = "~/post";
-          } else {
-            return `<div class="text-red-500">ls: cannot access '${args[0]}': No such file or directory</div>`;
+            if (flags.l) {
+              const entries = await fs.lsLong(path);
+              let output = '<div class="space-y-1 text-xs">';
+              for (const entry of entries) {
+                const size = entry.size.toString().padStart(8);
+                const date = entry.modified.toLocaleDateString();
+                const name =
+                  entry.type === "dir"
+                    ? `<span class="text-shell-blue font-bold">${entry.name}/</span>`
+                    : `<span class="text-shell-accent">${entry.name}</span>`;
+                output += `<div>${size} ${date} ${name}</div>`;
+              }
+              output += "</div>";
+              return output;
+            } else {
+              const entries = await fs.ls(path);
+              let output = '<div class="space-y-1">';
+              for (const name of entries) {
+                const fullPath = path === "." ? name : `${path}/${name}`;
+                const isDir = fs.isDirectory(fullPath);
+                if (isDir) {
+                  output += `<div class="text-shell-blue font-bold">${name}/</div>`;
+                } else {
+                  output += `<div class="text-shell-accent">${name}</div>`;
+                }
+              }
+              output += "</div>";
+              return output;
+            }
+          } catch (err) {
+            return `<div class="text-red-500">ls: ${err.message}</div>`;
           }
-        }
+        },
 
-        let dir;
-        if (targetDir === "~") {
-          dir = fileSystem["~"];
-        } else if (targetDir === "~/post") {
-          dir = fileSystem["~"].contents["post"];
-        }
+        pwd: async () => {
+          return `<div class="text-white">${fs.pwd()}</div>`;
+        },
 
-        const contents = Object.keys(dir.contents);
-
-        let output = '<div class="space-y-1">';
-        contents.forEach((name) => {
-          const item = dir.contents[name];
-          if (item.type === "dir") {
-            output += `<div class="text-shell-blue font-bold">${name}/</div>`;
-          } else {
-            output += `<div class="text-shell-accent">${name}</div>`;
+        cd: async (args) => {
+          try {
+            const target = args[0] || "~";
+            await fs.cd(target);
+            updatePrompt();
+            return "";
+          } catch (err) {
+            return `<div class="text-red-500">cd: ${err.message}</div>`;
           }
-        });
-        output += "</div>";
-        return output;
-      },
+        },
 
-      pwd: () => {
-        return `<div class="text-white">${currentDir}</div>`;
-      },
+        cat: async (args) => {
+          if (!args[0]) {
+            return '<div class="text-red-500">cat: missing file operand</div>';
+          }
 
-      cd: (args) => {
-        const target = args[0];
-        if (!target || target === "~") {
-          currentDir = "~";
-          updatePrompt();
-          return "";
-        }
+          const filename = args[0];
 
-        if (target === "post" && currentDir === "~") {
-          currentDir = "~/post";
-          updatePrompt();
-          return "";
-        }
-
-        if (target === ".." && currentDir === "~/post") {
-          currentDir = "~";
-          updatePrompt();
-          return "";
-        }
-
-        return `<div class="text-red-500">cd: ${target}: No such directory</div>`;
-      },
-
-      cat: (args) => {
-        if (!args[0]) {
-          return '<div class="text-red-500">cat: missing file operand</div>';
-        }
-
-        const filename = args[0];
-
-        if (filename === "profile.txt") {
-          return `
+          // Check if it's a special file
+          if (
+            filename === "profile.txt" ||
+            filename === "/home/user/profile.txt" ||
+            filename === "~/profile.txt"
+          ) {
+            return `
 <div class="flex gap-4 flex-col md:flex-row items-start">
   <img src="https://static.prateek.page/images/profile.jpg" alt="Prateek Kumar" class="w-32 h-32 rounded-lg border-2 border-shell-blue" />
   <div class="space-y-2 flex-1">
@@ -251,10 +291,14 @@ Type <span class="text-shell-blue font-bold">ls</span> to list files and directo
     <div class="text-shell-text-dimmer">Specialization: <span class="text-shell-blue">Rust</span> | <span class="text-shell-accent">JavaScript</span></div>
   </div>
 </div>`;
-        }
+          }
 
-        if (filename === "projects.txt") {
-          return `
+          if (
+            filename === "projects.txt" ||
+            filename === "/home/user/projects.txt" ||
+            filename === "~/projects.txt"
+          ) {
+            return `
 <div class="space-y-3">
   <div class="">
     <div class="font-bold text-white">Open-WBO-Inc</div>
@@ -279,19 +323,27 @@ Type <span class="text-shell-blue font-bold">ls</span> to list files and directo
     <a href="https://autojudge.readthedocs.io/" target="_blank" class="text-shell-accent text-sm ml-2">[Docs]</a>
   </div>
 </div>`;
-        }
+          }
 
-        if (filename === "education.txt") {
-          return `
+          if (
+            filename === "education.txt" ||
+            filename === "/home/user/education.txt" ||
+            filename === "~/education.txt"
+          ) {
+            return `
 <div class="">
   <div class="text-white font-bold">B. Tech. (Honors) in Computer Science and Engineering</div>
   <div class="text-shell-text-dim">Indian Institute of Technology Hyderabad, India</div>
   <div class="text-shell-text-dimmer">2015-2019</div>
 </div>`;
-        }
+          }
 
-        if (filename === "publications.txt") {
-          return `
+          if (
+            filename === "publications.txt" ||
+            filename === "/home/user/publications.txt" ||
+            filename === "~/publications.txt"
+          ) {
+            return `
 <div class="space-y-3 text-xs">
   <div class="">
     <div class="text-white font-semibold">Open-WBO-Inc: Approximation Strategies for Incomplete Weighted MaxSAT.</div>
@@ -315,62 +367,276 @@ Type <span class="text-shell-blue font-bold">ls</span> to list files and directo
     <a href="https://scholar.google.co.in/citations?user=M1NFyhAAAAAJ&hl=en" target="_blank" class="text-shell-accent">[Google Scholar]</a>
   </div>
 </div>`;
-        }
+          }
 
-        if (filename === "contact.txt") {
-          return `
+          if (
+            filename === "contact.txt" ||
+            filename === "/home/user/contact.txt" ||
+            filename === "~/contact.txt"
+          ) {
+            return `
 <div class="space-y-2">
   <div class="text-white font-bold">Contact Information:</div>
   <div><a href="https://github.com/prateekkumarweb" target="_blank" class="text-shell-accent">GitHub: @prateekkumarweb</a></div>
   <div><a href="https://bsky.app/profile/prateek.page" target="_blank" class="text-shell-accent">Bluesky: @prateek.page</a></div>
   <div><a href="https://www.linkedin.com/in/prateekkumarweb/" target="_blank" class="text-shell-accent">LinkedIn: prateekkumarweb</a></div>
 </div>`;
-        }
+          }
 
-        if (filename === ".secrets") {
-          return `
+          if (
+            filename === ".secrets" ||
+            filename === "/home/user/.secrets" ||
+            filename === "~/.secrets"
+          ) {
+            return `
 <div class="text-shell-accent">
   🔒 You found the secret file!
   
   Secret: I actually prefer tabs over spaces... just kidding! 😄
 </div>`;
-        }
+          }
 
-        // Check if it's a blog post in ~/post directory
-        if (currentDir === "~/post" && filename.endsWith(".md")) {
-          const postSlug = filename.replace(".md", "");
-          const post = postsData.find((p) => p.slug === postSlug);
-          if (post) {
-            const date = new Date(post.date).toLocaleDateString("en-US", {
-              year: "numeric",
-              month: "short",
-              day: "numeric",
-            });
-            return `
+          // Check if it's a blog post
+          if (filename.endsWith(".md")) {
+            try {
+              const data = fs.getFileData(filename);
+              if (data) {
+                const date = new Date(data.date).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                });
+                return `
 <div class="space-y-2">
-  <div class="text-white text-xl font-bold">${post.title}</div>
+  <div class="text-white text-xl font-bold">${data.title}</div>
   <div class="text-shell-text-dimmer text-sm">${date}</div>
   <div class="mt-2">
-    <a href="/post/${post.slug}/" class="text-shell-accent">[Read full post]</a>
+    <a href="/post/${data.slug}/" class="text-shell-accent">[Read full post]</a>
   </div>
 </div>`;
+              }
+            } catch {}
           }
-        }
 
-        return `<div class="text-red-500">cat: ${filename}: No such file or directory</div>`;
-      },
+          // Try reading from filesystem
+          try {
+            const content = await fs.readFile(filename);
+            if (content) {
+              return `<div class="text-white whitespace-pre-wrap">${content}</div>`;
+            } else {
+              return `<div class="text-shell-text-dimmer">(empty file)</div>`;
+            }
+          } catch (err) {
+            return `<div class="text-red-500">cat: ${err.message}</div>`;
+          }
+        },
 
-      clear: () => {
-        terminalOutput.innerHTML = "";
-        return null;
-      },
+        mkdir: async (args, flags) => {
+          if (!args[0]) {
+            return '<div class="text-red-500">mkdir: missing operand</div>';
+          }
+          try {
+            await fs.mkdir(args[0], flags.p || false);
+            return "";
+          } catch (err) {
+            return `<div class="text-red-500">mkdir: ${err.message}</div>`;
+          }
+        },
 
-      whoami: () => {
-        return `<div class="text-white">user</div>`;
-      },
+        rmdir: async (args) => {
+          if (!args[0]) {
+            return '<div class="text-red-500">rmdir: missing operand</div>';
+          }
+          try {
+            await fs.rmdir(args[0]);
+            return "";
+          } catch (err) {
+            return `<div class="text-red-500">rmdir: ${err.message}</div>`;
+          }
+        },
 
-      neofetch: () => {
-        return `
+        touch: async (args) => {
+          if (!args[0]) {
+            return '<div class="text-red-500">touch: missing file operand</div>';
+          }
+          try {
+            await fs.touch(args[0]);
+            return "";
+          } catch (err) {
+            return `<div class="text-red-500">touch: ${err.message}</div>`;
+          }
+        },
+
+        rm: async (args, flags) => {
+          if (!args[0]) {
+            return '<div class="text-red-500">rm: missing operand</div>';
+          }
+          try {
+            const recursive = flags.r || flags.R || false;
+            const force = flags.f || false;
+            await fs.rm(args[0], recursive, force);
+            return "";
+          } catch (err) {
+            return `<div class="text-red-500">rm: ${err.message}</div>`;
+          }
+        },
+
+        cp: async (args, flags) => {
+          if (args.length < 2) {
+            return '<div class="text-red-500">cp: missing file operand</div>';
+          }
+          try {
+            const recursive = flags.r || flags.R || false;
+            await fs.cp(args[0], args[1], recursive);
+            return "";
+          } catch (err) {
+            return `<div class="text-red-500">cp: ${err.message}</div>`;
+          }
+        },
+
+        mv: async (args) => {
+          if (args.length < 2) {
+            return '<div class="text-red-500">mv: missing file operand</div>';
+          }
+          try {
+            await fs.mv(args[0], args[1]);
+            return "";
+          } catch (err) {
+            return `<div class="text-red-500">mv: ${err.message}</div>`;
+          }
+        },
+
+        echo: async (args) => {
+          return `<div class="text-white">${args.join(" ")}</div>`;
+        },
+
+        grep: async (args, flags) => {
+          if (args.length < 2) {
+            return '<div class="text-red-500">grep: missing operand</div>';
+          }
+          try {
+            const pattern = args[0];
+            const path = args[1];
+            const recursive = flags.r || flags.R || false;
+            const results = await fs.grep(pattern, path, recursive);
+
+            if (results.length === 0) {
+              return '<div class="text-shell-text-dimmer">No matches found</div>';
+            }
+
+            let output = '<div class="space-y-1 text-xs">';
+            for (const result of results) {
+              output += `<div><span class="text-shell-blue">${result.path}:${result.line}:</span> ${result.content}</div>`;
+            }
+            output += "</div>";
+            return output;
+          } catch (err) {
+            return `<div class="text-red-500">grep: ${err.message}</div>`;
+          }
+        },
+
+        find: async (args) => {
+          if (args.length < 2) {
+            return '<div class="text-red-500">find: usage: find [path] [pattern]</div>';
+          }
+          try {
+            const path = args[0];
+            const pattern = args[1];
+            const results = await fs.find(path, pattern);
+
+            if (results.length === 0) {
+              return '<div class="text-shell-text-dimmer">No files found</div>';
+            }
+
+            let output = '<div class="space-y-1">';
+            for (const result of results) {
+              output += `<div class="text-shell-accent">${result}</div>`;
+            }
+            output += "</div>";
+            return output;
+          } catch (err) {
+            return `<div class="text-red-500">find: ${err.message}</div>`;
+          }
+        },
+
+        wc: async (args) => {
+          if (!args[0]) {
+            return '<div class="text-red-500">wc: missing file operand</div>';
+          }
+          try {
+            const stats = await fs.wc(args[0]);
+            return `<div class="text-white">${stats.lines} ${stats.words} ${stats.chars} ${args[0]}</div>`;
+          } catch (err) {
+            return `<div class="text-red-500">wc: ${err.message}</div>`;
+          }
+        },
+
+        head: async (args, flags) => {
+          if (!args[0]) {
+            return '<div class="text-red-500">head: missing file operand</div>';
+          }
+          try {
+            const lines = flags.n ? parseInt(flags.n) : 10;
+            const content = await fs.head(args[0], lines);
+            return `<div class="text-white whitespace-pre-wrap">${content}</div>`;
+          } catch (err) {
+            return `<div class="text-red-500">head: ${err.message}</div>`;
+          }
+        },
+
+        tail: async (args, flags) => {
+          if (!args[0]) {
+            return '<div class="text-red-500">tail: missing file operand</div>';
+          }
+          try {
+            const lines = flags.n ? parseInt(flags.n) : 10;
+            const content = await fs.tail(args[0], lines);
+            return `<div class="text-white whitespace-pre-wrap">${content}</div>`;
+          } catch (err) {
+            return `<div class="text-red-500">tail: ${err.message}</div>`;
+          }
+        },
+
+        tree: async (args, flags) => {
+          try {
+            const path = args[0] || ".";
+            const maxDepth = flags.L ? parseInt(flags.L) : Infinity;
+            const treeStr = await fs.tree(path, maxDepth);
+            return `<div class="text-white whitespace-pre font-mono text-xs">${treeStr}</div>`;
+          } catch (err) {
+            return `<div class="text-red-500">tree: ${err.message}</div>`;
+          }
+        },
+
+        clear: async () => {
+          terminalOutput.innerHTML = "";
+          return null;
+        },
+
+        reset: async () => {
+          try {
+            await fs.reset();
+            // Re-add blog posts
+            for (const post of postsData) {
+              const path = `/home/user/post/${post.slug}.md`;
+              if (!fs.exists(path)) {
+                await fs.writeFile(path, "", false);
+                fs.setFileData(path, post);
+              }
+            }
+            updatePrompt();
+            return `<div class="text-shell-accent">Filesystem reset to default state. All custom files and directories have been removed.</div>`;
+          } catch (err) {
+            return `<div class="text-red-500">reset: ${err.message}</div>`;
+          }
+        },
+
+        whoami: async () => {
+          return `<div class="text-white">user</div>`;
+        },
+
+        neofetch: async () => {
+          return `
 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
   <div class="text-shell-blue text-xs">
 <pre>
@@ -388,12 +654,12 @@ Type <span class="text-shell-blue font-bold">ls</span> to list files and directo
     <div><span class="text-shell-blue font-bold">Uptime:</span> ${Math.floor(performance.now() / 1000)}s</div>
   </div>
 </div>`;
-      },
+        },
 
-      cowsay: (args) => {
-        const message = args.join(" ") || "Hello!";
-        const length = message.length;
-        return `
+        cowsay: async (args) => {
+          const message = args.join(" ") || "Hello!";
+          const length = message.length;
+          return `
 <div class="text-shell-accent text-xs">
 <pre>
  ${"_".repeat(length + 2)}
@@ -406,29 +672,29 @@ Type <span class="text-shell-blue font-bold">ls</span> to list files and directo
                 ||     ||
 </pre>
 </div>`;
-      },
+        },
 
-      sudo: (args) => {
-        const cmd = args.join(" ");
-        if (cmd.includes("rm -rf")) {
-          return `
+        sudo: async (args) => {
+          const cmd = args.join(" ");
+          if (cmd.includes("rm -rf")) {
+            return `
 <div class="text-red-500">
   <div>⚠️  CRITICAL WARNING ⚠️</div>
   <div class="my-2">Deleting everything...</div>
   <div>Just kidding! Nice try though 😄</div>
   <div class="mt-2 text-shell-text-dimmer">(You need REAL root access for that)</div>
 </div>`;
-        }
-        return `
+          }
+          return `
 <div class="text-red-500">
   [sudo] password for user: 
   <div class="mt-1">Sorry, user is not in the sudoers file. This incident will be reported.</div>
   <div class="text-shell-text-dimmer text-xs mt-1">(Just kidding, you can't actually sudo here 😄)</div>
 </div>`;
-      },
+        },
 
-      hack: () => {
-        return `
+        hack: async () => {
+          return `
 <div class="text-shell-accent">
   <div>Initiating hacking sequence...</div>
   <div class="mt-2">
@@ -442,10 +708,10 @@ Type <span class="text-shell-blue font-bold">ls</span> to list files and directo
     (Not really, this is just for fun 😄)
   </div>
 </div>`;
-      },
+        },
 
-      matrix: () => {
-        return `
+        matrix: async () => {
+          return `
 <div class="text-shell-blue text-xs">
   <div class="text-shell-accent">Entering the Matrix...</div>
   <div class="mt-2 overflow-hidden h-32 relative">
@@ -460,84 +726,104 @@ Type <span class="text-shell-blue font-bold">ls</span> to list files and directo
   </div>
   <div class="mt-2 text-white">Welcome to the Matrix!</div>
 </div>`;
-      },
+        },
 
-      exit: () => {
-        window.location.href = "/";
-        return '<div class="text-shell-accent">Exiting shell mode...</div>';
-      },
+        exit: async () => {
+          window.location.href = "/";
+          return '<div class="text-shell-accent">Exiting shell mode...</div>';
+        },
+      };
 
-      echo: (args) => {
-        return `<div class="text-white">${args.join(" ")}</div>`;
-      },
-    };
+      // Handle command execution
+      async function executeCommand(input) {
+        const trimmed = input.trim();
+        if (!trimmed) return;
 
-    // Handle command execution
-    function executeCommand(input) {
-      const trimmed = input.trim();
-      if (!trimmed) return;
+        addCommandToOutput(trimmed);
+        commandHistory.push(trimmed);
+        historyIndex = commandHistory.length;
 
-      addCommandToOutput(trimmed);
-      commandHistory.push(trimmed);
-      historyIndex = commandHistory.length;
+        const { cmd, args, flags, redirect } = parseCommand(trimmed);
 
-      const [cmd, ...args] = trimmed.split(" ");
+        if (commands[cmd]) {
+          try {
+            let output = await commands[cmd](args, flags);
 
-      if (commands[cmd]) {
-        const output = commands[cmd](args);
-        if (output !== null && output !== "") {
-          addOutput(output, "mb-4");
-        }
-      } else {
-        addOutput(
-          `<div class="text-red-500">Command not found: ${cmd}. Type 'help' for available commands.</div>`,
-          "mb-4",
-        );
-      }
-    }
+            // Handle redirects
+            if (redirect && cmd === "echo") {
+              try {
+                const content = args.join(" ") + "\n";
+                await fs.writeFile(
+                  redirect.target,
+                  content,
+                  redirect.type === ">>",
+                );
+                output = "";
+              } catch (err) {
+                output = `<div class="text-red-500">Error: ${err.message}</div>`;
+              }
+            }
 
-    // Handle keyboard input
-    commandInput.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        executeCommand(commandInput.value);
-        commandInput.value = "";
-      } else if (e.key === "ArrowUp") {
-        e.preventDefault();
-        if (historyIndex > 0) {
-          historyIndex--;
-          commandInput.value = commandHistory[historyIndex];
-        }
-      } else if (e.key === "ArrowDown") {
-        e.preventDefault();
-        if (historyIndex < commandHistory.length - 1) {
-          historyIndex++;
-          commandInput.value = commandHistory[historyIndex];
+            if (output !== null && output !== "") {
+              addOutput(output, "mb-4");
+            }
+          } catch (err) {
+            addOutput(
+              `<div class="text-red-500">Error executing command: ${err.message}</div>`,
+              "mb-4",
+            );
+          }
         } else {
-          historyIndex = commandHistory.length;
+          addOutput(
+            `<div class="text-red-500">Command not found: ${cmd}. Type 'help' for available commands.</div>`,
+            "mb-4",
+          );
+        }
+      }
+
+      // Handle keyboard input
+      commandInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          executeCommand(commandInput.value);
           commandInput.value = "";
+        } else if (e.key === "ArrowUp") {
+          e.preventDefault();
+          if (historyIndex > 0) {
+            historyIndex--;
+            commandInput.value = commandHistory[historyIndex];
+          }
+        } else if (e.key === "ArrowDown") {
+          e.preventDefault();
+          if (historyIndex < commandHistory.length - 1) {
+            historyIndex++;
+            commandInput.value = commandHistory[historyIndex];
+          } else {
+            historyIndex = commandHistory.length;
+            commandInput.value = "";
+          }
+        } else if (e.key === "Tab") {
+          e.preventDefault();
+          // Simple autocomplete for commands
+          const partial = commandInput.value;
+          const matches = Object.keys(commands).filter((cmd) =>
+            cmd.startsWith(partial),
+          );
+          if (matches.length === 1) {
+            commandInput.value = matches[0];
+          }
         }
-      } else if (e.key === "Tab") {
-        e.preventDefault();
-        // Simple autocomplete for commands
-        const partial = commandInput.value;
-        const matches = Object.keys(commands).filter((cmd) =>
-          cmd.startsWith(partial),
-        );
-        if (matches.length === 1) {
-          commandInput.value = matches[0];
+      });
+
+      // Keep focus on input when clicking in terminal area (not on links/text)
+      terminalContainer.addEventListener("click", (e) => {
+        // Don't refocus if clicking on a link or selecting text
+        if (
+          e.target.tagName !== "A" &&
+          window.getSelection().toString() === ""
+        ) {
+          commandInput.focus();
         }
-      }
+      });
     });
-
-    // Keep focus on input when clicking in terminal area (not on links/text)
-    terminalContainer.addEventListener("click", (e) => {
-      // Don't refocus if clicking on a link or selecting text
-      if (e.target.tagName !== "A" && window.getSelection().toString() === "") {
-        commandInput.focus();
-      }
-    });
-
-    // Initialize terminal
-    showWelcome();
   </script>
 </ShellLayout>

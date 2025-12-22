@@ -20,6 +20,7 @@
     "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.1.18",
     "astro": "^5.16.6",
+    "idb": "^8.0.3",
     "rehype-mathjax": "^7.1.0",
     "remark-gemoji": "^8.0.0",
     "remark-math": "^6.0.0",
