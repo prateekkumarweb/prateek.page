@@ -4,3 +4,16 @@
 @plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:where(.dark, .dark *));
+
+/* Shell theme colors */
+@theme {
+  --color-shell-primary: #123456;
+  --color-shell-blue: #4a90d9;
+  --color-shell-blue-light: #6ba3e0;
+  --color-shell-accent: #f59e0b;
+  --color-shell-text: #e0e0e0;
+  --color-shell-text-dim: #cccccc;
+  --color-shell-text-dimmer: #aaaaaa;
+  --color-shell-bg: #0a0a0a;
+  --color-shell-bg-elevated: #0f0f0f;
+}
