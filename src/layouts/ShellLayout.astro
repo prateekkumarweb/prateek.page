@@ -45,7 +45,7 @@ const {
     <link rel="sitemap" href="/sitemap-index.xml" />
   </head>
   <body class="shell-theme">
-    <div class="min-h-screen bg-[#0a0a0a] text-[#e0e0e0]">
+    <div class="min-h-screen bg-shell-bg text-shell-text">
       <!-- Scan line effect -->
       <div class="scanlines pointer-events-none fixed inset-0 z-50"></div>
 
@@ -56,63 +56,5 @@ const {
         <slot />
       </div>
     </div>
-
-    <style is:global>
-      .shell-theme {
-        font-family: "JetBrains Mono", "Courier New", monospace;
-      }
-
-      /* Scanline effect */
-      .scanlines {
-        background: linear-gradient(
-          to bottom,
-          transparent 50%,
-          rgba(0, 255, 0, 0.02) 51%
-        );
-        background-size: 100% 4px;
-        animation: scanline 8s linear infinite;
-      }
-
-      @keyframes scanline {
-        0% {
-          transform: translateY(0);
-        }
-        100% {
-          transform: translateY(4px);
-        }
-      }
-
-      /* CRT glow effect */
-      .crt-glow {
-        background: radial-gradient(
-          ellipse at center,
-          transparent 0%,
-          rgba(18, 52, 86, 0.1) 100%
-        );
-      }
-
-      /* Text shadow for CRT effect */
-      .shell-theme {
-        text-shadow: 0 0 5px rgba(224, 224, 224, 0.3);
-      }
-
-      /* Hide scrollbar but keep functionality */
-      #terminal-output::-webkit-scrollbar {
-        width: 8px;
-      }
-
-      #terminal-output::-webkit-scrollbar-track {
-        background: #0a0a0a;
-      }
-
-      #terminal-output::-webkit-scrollbar-thumb {
-        background: #123456;
-        border-radius: 4px;
-      }
-
-      #terminal-output::-webkit-scrollbar-thumb:hover {
-        background: #1a4a6a;
-      }
-    </style>
   </body>
 </html>

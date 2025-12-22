@@ -5,7 +5,7 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* Shell theme colors */
+/* Shell theme colors and animations */
 @theme {
   --color-shell-primary: #123456;
   --color-shell-blue: #4a90d9;
@@ -16,4 +16,81 @@
   --color-shell-text-dimmer: #aaaaaa;
   --color-shell-bg: #0a0a0a;
   --color-shell-bg-elevated: #0f0f0f;
+
+  /* Font families */
+  --font-mono:
+    "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+
+  /* Animations */
+  --animate-scroll: scroll 5s linear infinite;
+  --animate-scanline: scanline 8s linear infinite;
+}
+
+/* Keyframe animations */
+@keyframes scroll {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-50%);
+  }
+}
+
+@keyframes scanline {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(4px);
+  }
+}
+
+/* Shell theme styles */
+.shell-theme {
+  font-family: var(--font-mono);
+  text-shadow: 0 0 5px rgba(224, 224, 224, 0.3);
+}
+
+/* Force monospace font for all shell elements */
+.shell-theme * {
+  font-family: var(--font-mono) !important;
+}
+
+/* Scanline effect */
+.scanlines {
+  background: linear-gradient(
+    to bottom,
+    transparent 50%,
+    rgba(0, 255, 0, 0.02) 51%
+  );
+  background-size: 100% 4px;
+  animation: scanline 8s linear infinite;
+}
+
+/* CRT glow effect */
+.crt-glow {
+  background: radial-gradient(
+    ellipse at center,
+    transparent 0%,
+    rgba(18, 52, 86, 0.1) 100%
+  );
+}
+
+/* Terminal scrollbar styling */
+#terminal-output::-webkit-scrollbar {
+  width: 8px;
+}
+
+#terminal-output::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+
+#terminal-output::-webkit-scrollbar-thumb {
+  background: #123456;
+  border-radius: 4px;
+}
+
+#terminal-output::-webkit-scrollbar-thumb:hover {
+  background: #1a4a6a;
 }

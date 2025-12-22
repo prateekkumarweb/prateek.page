@@ -449,7 +449,7 @@ Type <span class="text-shell-blue font-bold">ls</span> to list files and directo
 <div class="text-shell-blue text-xs">
   <div class="text-shell-accent">Entering the Matrix...</div>
   <div class="mt-2 overflow-hidden h-32 relative">
-    <div class="animate-[scroll_5s_linear_infinite]">
+    <div class="animate-scroll">
       <div>01010111 01100101 01101100 01100011</div>
       <div>01101111 01101101 01100101 00100000</div>
       <div>01110100 01101111 00100000 01110100</div>
@@ -540,17 +540,4 @@ Type <span class="text-shell-blue font-bold">ls</span> to list files and directo
     // Initialize terminal
     showWelcome();
   </script>
-
-  <style>
-    @reference "../styles/global.css";
-
-    @keyframes scroll {
-      from {
-        transform: translateY(0);
-      }
-      to {
-        transform: translateY(-50%);
-      }
-    }
-  </style>
 </ShellLayout>
