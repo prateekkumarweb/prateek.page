@@ -12,7 +12,6 @@ const allPosts = (await getCollection("post"))
 
 // Serialize posts data for client-side JavaScript
 const postsData = allPosts.map((post) => ({
-  slug: post.slug,
   title: post.data.title,
   date: post.data.date.toISOString(),
   tags: post.data.tags || [],
@@ -82,7 +81,7 @@ const postsData = allPosts.map((post) => ({
       fs.init().then(async () => {
         // Add blog posts to filesystem
         for (const post of postsData) {
-          const path = `/home/user/post/${post.slug}.md`;
+          const path = `/home/user/post/${post.id}.md`;
           if (!fs.exists(path)) {
             await fs.writeFile(path, "", false);
             fs.setFileData(path, post);
@@ -411,7 +410,7 @@ Type <span class="text-shell-blue font-bold">ls</span> to list files and directo
   <div class="text-white text-xl font-bold">${data.title}</div>
   <div class="text-shell-text-dimmer text-sm">${date}</div>
   <div class="mt-2">
-    <a href="/post/${data.slug}/" class="text-shell-accent">[Read full post]</a>
+    <a href="/post/${data.id}/" class="text-shell-accent">[Read full post]</a>
   </div>
 </div>`;
               }
@@ -618,7 +617,7 @@ Type <span class="text-shell-blue font-bold">ls</span> to list files and directo
             await fs.reset();
             // Re-add blog posts
             for (const post of postsData) {
-              const path = `/home/user/post/${post.slug}.md`;
+              const path = `/home/user/post/${post.id}.md`;
               if (!fs.exists(path)) {
                 await fs.writeFile(path, "", false);
                 fs.setFileData(path, post);
