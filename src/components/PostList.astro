@@ -14,11 +14,11 @@ const { posts } = Astro.props;
       .filter((post) => post.data.publish)
       .map((post) => (
         <li>
-          <div class="flex justify-between items-center">
+          <div class="flex items-center justify-between">
             <a href={`/post/${post.id}/`} class="underline hover:no-underline">
               {post.data.title}
             </a>
-            <span class="text-sm ">{post.data.date.toDateString()}</span>
+            <span class="text-sm">{post.data.date.toDateString()}</span>
           </div>
         </li>
       ))

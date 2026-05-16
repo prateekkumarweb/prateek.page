@@ -9,19 +9,19 @@ import IconLinkedIn from "~icons/simple-icons/linkedin";
 import IconMastodon from "~icons/simple-icons/mastodon";
 ---
 
-<nav class="flex flex-col md:flex-row justify-between my-4">
-  <div class="flex justify-between mb-4">
+<nav class="my-4 flex flex-col justify-between md:flex-row">
+  <div class="mb-4 flex justify-between">
     <header class="text-2xl font-semibold">
       <a href="/">Prateek Kumar</a>
     </header>
-    <button class="md:hidden text-lg" id="toggle-navbar" title="Toggle Menu">
+    <button class="text-lg md:hidden" id="toggle-navbar" title="Toggle Menu">
       <IconHamburger id="toggle-navbar-bars" />
       <IconClose id="toggle-navbar-close" />
     </button>
   </div>
   <ul
     id="navbar-menu"
-    class="flex flex-col md:flex-row gap-4 text-lg items-start md:items-center"
+    class="flex flex-col items-start gap-4 text-lg md:flex-row md:items-center"
   >
     <li>
       <a href="https://twopi.dev" target="_blank">TwoPi</a>

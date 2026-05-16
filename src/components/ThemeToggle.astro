@@ -5,16 +5,16 @@ import IconHeroiconsOutlineSystem from "~icons/heroicons-outline/computer-deskto
 ---
 
 <div
-  class="inline-flex gap-1 border rounded-full border-gray-400 dark:border-gray-500 text-sm bg-gray-300 dark:bg-gray-600 p-1"
+  class="inline-flex gap-1 rounded-full border border-gray-400 bg-gray-300 p-1 text-sm dark:border-gray-500 dark:bg-gray-600"
   title="Switch theme"
 >
-  <button class="w-8 h-8" id="toggle-theme-light" aria-label="Light Theme">
+  <button class="h-8 w-8" id="toggle-theme-light" aria-label="Light Theme">
     <IconHeroiconsOutlineSun />
   </button>
-  <button class="w-8 h-8" id="toggle-theme-dark" aria-label="Dark Theme">
+  <button class="h-8 w-8" id="toggle-theme-dark" aria-label="Dark Theme">
     <IconHeroiconsOutlineMoon />
   </button>
-  <button class="w-8 h-8" id="toggle-theme-system" aria-label="System Theme">
+  <button class="h-8 w-8" id="toggle-theme-system" aria-label="System Theme">
     <IconHeroiconsOutlineSystem />
   </button>
 </div>
@@ -23,7 +23,7 @@ import IconHeroiconsOutlineSystem from "~icons/heroicons-outline/computer-deskto
   @reference "../styles/global.css";
 
   .pk-theme-selected {
-    @apply bg-gray-100 rounded-full dark:bg-gray-800;
+    @apply rounded-full bg-gray-100 dark:bg-gray-800;
   }
 </style>
 

@@ -17,7 +17,7 @@ const imageUrl = frontmatter.image;
 
 <BaseLayout title={frontmatter.title + " | Prateek Kumar"} image={imageUrl}>
   {imageUrl && <img src={imageUrl} alt="banner image" class="mb-3 w-full" />}
-  <div class="flex items-center justify-between flex-wrap gap-2 mb-3">
+  <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
     <TagList tags={frontmatter.tags} />
     <div class="text-sm">{dateString}</div>
   </div>
