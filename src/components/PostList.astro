@@ -3,24 +3,34 @@ import type { CollectionEntry } from "astro:content";
 
 interface Props {
   posts: CollectionEntry<"post">[];
+  limit?: number;
 }
 
-const { posts } = Astro.props;
+const { posts, limit } = Astro.props;
+const published = posts.filter((post) => post.data.publish);
+const displayed = limit ? published.slice(0, limit) : published;
 ---
 
-<ul>
+<ul class="divide-y divide-slate-100 dark:divide-slate-800">
   {
-    posts
-      .filter((post) => post.data.publish)
-      .map((post) => (
-        <li>
-          <div class="flex items-center justify-between">
-            <a href={`/post/${post.id}/`} class="underline hover:no-underline">
-              {post.data.title}
-            </a>
-            <span class="text-sm">{post.data.date.toDateString()}</span>
-          </div>
-        </li>
-      ))
+    displayed.map((post) => (
+      <li class="py-2.5">
+        <div class="flex items-baseline justify-between gap-4">
+          <a
+            href={`/post/${post.id}/`}
+            class="hover:text-primary dark:hover:text-primary-muted text-sm text-slate-800 no-underline hover:underline dark:text-slate-100"
+          >
+            {post.data.title}
+          </a>
+          <span class="shrink-0 text-xs text-slate-500 dark:text-slate-400">
+            {post.data.date.toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+            })}
+          </span>
+        </div>
+      </li>
+    ))
   }
 </ul>

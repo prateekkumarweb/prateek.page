@@ -1,0 +1,21 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+import PostList from "@/components/PostList.astro";
+
+const allPosts = (await getCollection("post"))
+  .filter((p) => p.data.publish)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+---
+
+<BaseLayout
+  title="Posts | Prateek Kumar"
+  description="All posts by Prateek Kumar"
+>
+  <h1
+    class="text-primary dark:text-primary-muted mb-6 text-xs font-semibold tracking-widest uppercase"
+  >
+    Posts
+  </h1>
+  <PostList posts={allPosts} />
+</BaseLayout>

@@ -1,27 +1,36 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import HeroBanner from "@/components/HeroBanner.astro";
-import MarkdownBody from "@/components/MarkdownBody.astro";
-import Profile from "@/components/Profile.mdx";
+import Profile from "@/components/Profile.astro";
 import { getCollection } from "astro:content";
 import PostList from "@/components/PostList.astro";
 
-const allPosts = (await getCollection("post"))
-  .sort((a, b) => {
-    if (a.data.date < b.data.date) return -1;
-    if (a.data.date > b.data.date) return 1;
-    return 0;
-  })
-  .reverse();
+const recentPosts = (await getCollection("post"))
+  .filter((p) => p.data.publish)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 ---
 
 <BaseLayout>
-  <div class="mt-12"></div>
   <HeroBanner />
-  <div class="mt-12"></div>
-  <MarkdownBody>
-    <Profile />
-    <h2>Archive</h2>
-    <PostList posts={allPosts} />
-  </MarkdownBody>
+
+  <hr class="my-8 border-slate-100 dark:border-slate-800" />
+
+  <Profile />
+
+  <hr class="my-8 border-slate-100 dark:border-slate-800" />
+
+  <section>
+    <h2
+      class="text-primary dark:text-primary-muted mb-4 text-xs font-semibold tracking-widest uppercase"
+    >
+      Recent Posts
+    </h2>
+    <PostList posts={recentPosts} limit={5} />
+    <a
+      href="/posts/"
+      class="text-primary dark:text-primary-muted mt-4 inline-block text-sm font-medium no-underline hover:underline"
+    >
+      View all posts →
+    </a>
+  </section>
 </BaseLayout>

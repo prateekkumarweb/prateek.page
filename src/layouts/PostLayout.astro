@@ -11,16 +11,35 @@ type Props = {
 };
 
 const { frontmatter } = Astro.props;
-const dateString = frontmatter.date.toDateString();
+const dateString = frontmatter.date.toLocaleDateString("en-US", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+});
 const imageUrl = frontmatter.image;
 ---
 
 <BaseLayout title={frontmatter.title + " | Prateek Kumar"} image={imageUrl}>
-  {imageUrl && <img src={imageUrl} alt="banner image" class="mb-3 w-full" />}
-  <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
-    <TagList tags={frontmatter.tags} />
-    <div class="text-sm">{dateString}</div>
+  <div class="mb-6">
+    <a
+      href="/posts/"
+      class="hover:text-primary dark:hover:text-primary-muted text-sm text-slate-500 no-underline transition-colors dark:text-slate-500"
+    >
+      ← All posts
+    </a>
   </div>
+
+  {
+    imageUrl && (
+      <img src={imageUrl} alt="banner image" class="mb-6 w-full rounded-lg" />
+    )
+  }
+
+  <div class="mb-6 flex flex-wrap items-center justify-between gap-3">
+    <TagList tags={frontmatter.tags} />
+    <time class="text-sm text-slate-500 dark:text-slate-500">{dateString}</time>
+  </div>
+
   <MarkdownBody>
     <slot />
   </MarkdownBody>

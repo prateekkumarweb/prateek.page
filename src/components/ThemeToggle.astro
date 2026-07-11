@@ -5,17 +5,29 @@ import IconHeroiconsOutlineSystem from "~icons/heroicons-outline/computer-deskto
 ---
 
 <div
-  class="inline-flex gap-1 rounded-full border border-gray-400 bg-gray-300 p-1 text-sm dark:border-gray-500 dark:bg-gray-600"
+  class="inline-flex gap-0.5 rounded-full border border-slate-200 bg-slate-100 p-1 dark:border-slate-700 dark:bg-slate-800"
   title="Switch theme"
 >
-  <button class="h-8 w-8" id="toggle-theme-light" aria-label="Light Theme">
-    <IconHeroiconsOutlineSun />
+  <button
+    class="hover:text-primary rounded-full p-1.5 text-slate-500 transition-colors dark:text-slate-400 dark:hover:text-white"
+    id="toggle-theme-light"
+    aria-label="Light Theme"
+  >
+    <IconHeroiconsOutlineSun class="h-4 w-4" />
   </button>
-  <button class="h-8 w-8" id="toggle-theme-dark" aria-label="Dark Theme">
-    <IconHeroiconsOutlineMoon />
+  <button
+    class="hover:text-primary rounded-full p-1.5 text-slate-500 transition-colors dark:text-slate-400 dark:hover:text-white"
+    id="toggle-theme-dark"
+    aria-label="Dark Theme"
+  >
+    <IconHeroiconsOutlineMoon class="h-4 w-4" />
   </button>
-  <button class="h-8 w-8" id="toggle-theme-system" aria-label="System Theme">
-    <IconHeroiconsOutlineSystem />
+  <button
+    class="hover:text-primary rounded-full p-1.5 text-slate-500 transition-colors dark:text-slate-400 dark:hover:text-white"
+    id="toggle-theme-system"
+    aria-label="System Theme"
+  >
+    <IconHeroiconsOutlineSystem class="h-4 w-4" />
   </button>
 </div>
 
@@ -23,7 +35,7 @@ import IconHeroiconsOutlineSystem from "~icons/heroicons-outline/computer-deskto
   @reference "../styles/global.css";
 
   .pk-theme-selected {
-    @apply rounded-full bg-gray-100 dark:bg-gray-800;
+    @apply text-primary bg-white shadow-sm dark:bg-slate-700 dark:text-white;
   }
 </style>
 
@@ -54,22 +66,19 @@ import IconHeroiconsOutlineSystem from "~icons/heroicons-outline/computer-deskto
   const htmlNode = document.querySelector("html") as HTMLElement;
 
   function applyTheme(theme: string) {
+    toggleThemeLightButton.classList.remove("pk-theme-selected");
+    toggleThemeDarkButton.classList.remove("pk-theme-selected");
+    toggleThemeSystemButton.classList.remove("pk-theme-selected");
+
     if (theme === "light") {
       htmlNode.classList.remove("dark");
       toggleThemeLightButton.classList.add("pk-theme-selected");
-      toggleThemeDarkButton.classList.remove("pk-theme-selected");
-      toggleThemeSystemButton.classList.remove("pk-theme-selected");
     } else if (theme === "dark") {
       htmlNode.classList.add("dark");
-      toggleThemeLightButton.classList.remove("pk-theme-selected");
       toggleThemeDarkButton.classList.add("pk-theme-selected");
-      toggleThemeSystemButton.classList.remove("pk-theme-selected");
-    } else if (theme === "system") {
-      toggleThemeLightButton.classList.remove("pk-theme-selected");
-      toggleThemeDarkButton.classList.remove("pk-theme-selected");
+    } else {
       toggleThemeSystemButton.classList.add("pk-theme-selected");
-      let dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      if (dark) {
+      if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
         htmlNode.classList.add("dark");
       } else {
         htmlNode.classList.remove("dark");
@@ -77,20 +86,12 @@ import IconHeroiconsOutlineSystem from "~icons/heroicons-outline/computer-deskto
     }
   }
 
-  window
-    .matchMedia("(prefers-color-scheme: dark)")
-    .addEventListener("change", () => {
-      applyTheme(currentTheme);
-    });
-
   let currentTheme = loadStartTheme();
   applyTheme(currentTheme);
 
   window
     .matchMedia("(prefers-color-scheme: dark)")
-    .addEventListener("change", () => {
-      applyTheme(currentTheme);
-    });
+    .addEventListener("change", () => applyTheme(currentTheme));
 
   toggleThemeLightButton.onclick = () => {
     currentTheme = "light";

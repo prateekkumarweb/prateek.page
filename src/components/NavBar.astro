@@ -1,38 +1,30 @@
 ---
 import ThemeToggle from "./ThemeToggle.astro";
-import IconHamburger from "~icons/pajamas/hamburger";
-import IconClose from "~icons/pajamas/close";
 import IconGitHub from "~icons/simple-icons/github";
 import IconBluesky from "~icons/simple-icons/bluesky";
 import IconX from "~icons/simple-icons/x";
 import IconLinkedIn from "~icons/simple-icons/linkedin";
-import IconMastodon from "~icons/simple-icons/mastodon";
 ---
 
-<nav class="my-4 flex flex-col justify-between md:flex-row">
-  <div class="mb-4 flex justify-between">
-    <header class="text-2xl font-semibold">
-      <a href="/">Prateek Kumar</a>
-    </header>
-    <button class="text-lg md:hidden" id="toggle-navbar" title="Toggle Menu">
-      <IconHamburger id="toggle-navbar-bars" />
-      <IconClose id="toggle-navbar-close" />
-    </button>
-  </div>
-  <ul
-    id="navbar-menu"
-    class="flex flex-col items-start gap-4 text-lg md:flex-row md:items-center"
+<nav
+  class="flex items-center justify-between border-b border-slate-200 py-4 dark:border-slate-800"
+>
+  <a
+    href="/posts/"
+    class="hover:text-primary text-sm font-medium text-slate-600 no-underline transition-colors dark:text-slate-300 dark:hover:text-white"
   >
-    <li>
-      <a href="https://twopi.dev" target="_blank">TwoPi</a>
-    </li>
-    <li class="inline-flex gap-4">
+    Posts
+  </a>
+
+  <div class="flex items-center gap-4">
+    <div class="flex items-center gap-3 text-slate-400 dark:text-slate-500">
       <a
         rel={Astro.url.pathname === "/" ? "me" : ""}
         href="https://github.com/prateekkumarweb"
         target="_blank"
         title="GitHub"
         aria-label="GitHub"
+        class="hover:text-primary transition-colors dark:hover:text-white"
       >
         <IconGitHub />
       </a>
@@ -42,6 +34,7 @@ import IconMastodon from "~icons/simple-icons/mastodon";
         target="_blank"
         title="Bluesky"
         aria-label="Bluesky"
+        class="hover:text-primary transition-colors dark:hover:text-white"
       >
         <IconBluesky />
       </a>
@@ -51,6 +44,7 @@ import IconMastodon from "~icons/simple-icons/mastodon";
         target="_blank"
         title="LinkedIn"
         aria-label="LinkedIn"
+        class="hover:text-primary transition-colors dark:hover:text-white"
       >
         <IconLinkedIn />
       </a>
@@ -60,62 +54,11 @@ import IconMastodon from "~icons/simple-icons/mastodon";
         target="_blank"
         title="X"
         aria-label="X"
+        class="hover:text-primary transition-colors dark:hover:text-white"
       >
         <IconX />
       </a>
-      <a
-        rel={Astro.url.pathname === "/" ? "me" : ""}
-        href="https://mastodon.online/@prateek"
-        target="_blank"
-        title="Mastodon"
-        aria-label="Mastodon"
-      >
-        <IconMastodon />
-      </a>
-    </li>
-    <li>
-      <ThemeToggle />
-    </li>
-  </ul>
+    </div>
+    <ThemeToggle />
+  </div>
 </nav>
-
-<style>
-  @reference "../styles/global.css";
-
-  li a {
-    @apply no-underline hover:underline;
-  }
-  .pk-menu-hidden {
-    @apply hidden md:flex;
-  }
-</style>
-
-<script>
-  const navbarToggle = document.querySelector(
-    "#toggle-navbar",
-  ) as HTMLButtonElement;
-  const navbarMenu = document.querySelector("#navbar-menu") as HTMLElement;
-  const barsIcon = document.querySelector("#toggle-navbar-bars") as HTMLElement;
-  const closeIcon = document.querySelector(
-    "#toggle-navbar-close",
-  ) as HTMLElement;
-  let menuShown = false;
-
-  function onToggleMenu() {
-    if (menuShown) {
-      barsIcon.classList.add("!hidden");
-      closeIcon.classList.remove("!hidden");
-      navbarMenu.classList.remove("pk-menu-hidden");
-    } else {
-      barsIcon.classList.remove("!hidden");
-      closeIcon.classList.add("!hidden");
-      navbarMenu.classList.add("pk-menu-hidden");
-    }
-  }
-
-  onToggleMenu();
-  navbarToggle.addEventListener("click", () => {
-    menuShown = !menuShown;
-    onToggleMenu();
-  });
-</script>

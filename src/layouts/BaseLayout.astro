@@ -1,7 +1,7 @@
 ---
 import "../styles/global.css";
-import Footer from "@/components/Footer.mdx";
-import NavBar from "@/components/NavBar.astro";
+import Footer from "@/components/Footer.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
 
 interface Props {
   title?: string;
@@ -22,6 +22,12 @@ const {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#123456" />
     <meta name="generator" content={Astro.generator} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300..700;1,14..32,300..700&display=swap"
+      rel="stylesheet"
+    />
 
     <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -37,28 +43,35 @@ const {
     <meta property="og:image" content={image} />
     <meta property="og:url" content={Astro.url} />
     <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <script is:inline>
+      (function () {
+        const theme = localStorage.getItem("color-scheme") || "system";
+        if (
+          theme === "dark" ||
+          (theme === "system" &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches)
+        ) {
+          document.documentElement.classList.add("dark");
+        }
+      })();
+    </script>
+
     <style is:global>
       svg.icon {
         @apply inline;
       }
-      mjx-container svg {
-        @apply inline;
-      }
     </style>
   </head>
-  <body>
-    <div
-      class="min-h-screen bg-gray-100 font-sans text-gray-700 antialiased dark:bg-gray-800 dark:text-gray-200"
-    >
-      <div class="container mx-auto flex min-h-screen justify-around">
-        <div class="mx-4 flex w-full max-w-7xl flex-col">
-          <NavBar />
-          <div class="mb-6 grow">
-            <slot />
-          </div>
-          <Footer />
-        </div>
-      </div>
+  <body
+    class="min-h-screen bg-white font-sans text-slate-800 antialiased dark:bg-slate-950 dark:text-slate-100"
+  >
+    <div class="mx-auto flex min-h-screen max-w-4xl flex-col px-6">
+      <SiteHeader />
+      <main class="grow py-10">
+        <slot />
+      </main>
+      <Footer />
     </div>
   </body>
 </html>
