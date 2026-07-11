@@ -2,9 +2,7 @@ import { defineConfig } from "astro/config";
 import { execSync } from "node:child_process";
 import mdx from "@astrojs/mdx";
 import icons from "unplugin-icons/vite";
-import emoji from "remark-gemoji";
-import math from "remark-math";
-import mathjax from "rehype-mathjax";
+import { satteri } from "@astrojs/markdown-satteri";
 import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
 
@@ -33,7 +31,6 @@ export default defineConfig({
   },
   integrations: [mdx(), sitemap()],
   markdown: {
-    remarkPlugins: [emoji, math],
-    rehypePlugins: [mathjax],
+    processor: satteri(),
   },
 });
