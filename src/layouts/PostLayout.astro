@@ -20,15 +20,6 @@ const imageUrl = frontmatter.image;
 ---
 
 <BaseLayout title={frontmatter.title + " | Prateek Kumar"} image={imageUrl}>
-  <div class="mb-6">
-    <a
-      href="/posts/"
-      class="hover:text-primary dark:hover:text-primary-muted text-sm text-slate-500 no-underline transition-colors dark:text-slate-500"
-    >
-      ← All posts
-    </a>
-  </div>
-
   {
     imageUrl && (
       <img src={imageUrl} alt="banner image" class="mb-6 w-full rounded-lg" />
