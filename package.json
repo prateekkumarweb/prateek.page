@@ -20,14 +20,14 @@
     "@tailwindcss/forms": "^0.5.11",
     "@tailwindcss/typography": "^0.5.20",
     "@tailwindcss/vite": "^4.3.3",
-    "astro": "^7.1.6",
+    "astro": "^7.2.0",
     "sharp": "^0.35.3",
     "tailwindcss": "^4.3.3",
     "typescript": "^7.0.2",
     "unplugin-icons": "^23.0.1"
   },
   "devDependencies": {
-    "@iconify/json": "^2.2.509",
+    "@iconify/json": "^2.2.510",
     "@types/node": "^26.1.2",
     "prettier": "^3.9.6",
     "prettier-plugin-astro": "^0.14.1",
